@@ -15,11 +15,19 @@ import { getCategories } from "@/entities/category/api/categoryApi";
 
 export const CategoryList = () => {
   const dispatch = useAppDispatch();
-  const categrories = useAppSelector((state) => state.categorySlice.categories.data);
-  const loading = useAppSelector((state) => state.categorySlice.categories.loading);
-  const hasNext = useAppSelector((state) => state.categorySlice.categories.next)
-  const hasPrev = useAppSelector((state) => state.categorySlice.categories.prev)
-  const [page, setPage] = React.useState(2)
+  const categrories = useAppSelector(
+    (state) => state.categorySlice.categories.data
+  );
+  const loading = useAppSelector(
+    (state) => state.categorySlice.categories.loading
+  );
+  const hasNext = useAppSelector(
+    (state) => state.categorySlice.categories.next
+  );
+  const hasPrev = useAppSelector(
+    (state) => state.categorySlice.categories.prev
+  );
+  const [page, setPage] = React.useState(2);
 
   const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] =
     React.useState(false);
@@ -45,12 +53,12 @@ export const CategoryList = () => {
   };
 
   const loadMore = () => {
-    dispatch(getCategories(page))
-    setPage((prev) => prev + 1)
-  }
+    dispatch(getCategories(page));
+    setPage((prev) => prev + 1);
+  };
 
   React.useEffect(() => {
-    if(!hasPrev){
+    if (!hasPrev) {
       dispatch(getCategories(1));
       console.log(hasPrev);
     }
@@ -68,8 +76,8 @@ export const CategoryList = () => {
         </div>
         <ul>
           <li className="flex border-primary border-t border-b px-8 py-2 border-opacity-20 flex-wrap justify-between items-center">
-            <div className="basis-[25%] text-[20px]">Categories</div>
-            <div className="basis-[25%] text-[20px] text-right">Actions</div>
+            <div className="basis-[25%] text-[16px]">Categories</div>
+            <div className="basis-[25%] text-[16px] text-right">Actions</div>
           </li>
           {categrories.map((category, i) => {
             return (
@@ -92,9 +100,15 @@ export const CategoryList = () => {
             );
           })}
         </ul>
-        {hasNext && <Button loading={loading} onClick={loadMore} className="mx-auto block mt-4" title={"Load more"} />}
+        {hasNext && (
+          <Button
+            loading={loading}
+            onClick={loadMore}
+            className="mx-auto block mt-4"
+            title={"Load more"}
+          />
+        )}
       </div>
-
 
       {/* MODALS */}
 

@@ -11,7 +11,8 @@ export default {
         secondary: '#303347',
         background: '#242739',
         textColor: '#D0D3EA',
-        red: '#EA5455'
+        red: '#EA5455',
+        green: '#61C478'
       }
     },
     boxShadow: {
