@@ -15,9 +15,11 @@ import { getCategories } from "@/entities/category/api/categoryApi";
 
 export const CategoryList = () => {
   const dispatch = useAppDispatch();
-  const categrories = useAppSelector(
-    (state) => state.categorySlice.categories.data
-  );
+  const categrories = useAppSelector((state) => state.categorySlice.categories.data);
+  const loading = useAppSelector((state) => state.categorySlice.categories.loading);
+  const hasNext = useAppSelector((state) => state.categorySlice.categories.next)
+  const hasPrev = useAppSelector((state) => state.categorySlice.categories.prev)
+  const [page, setPage] = React.useState(2)
 
   const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] =
     React.useState(false);
@@ -42,13 +44,21 @@ export const CategoryList = () => {
     setIsOpenDeleteCategoryModal(true);
   };
 
+  const loadMore = () => {
+    dispatch(getCategories(page))
+    setPage((prev) => prev + 1)
+  }
+
   React.useEffect(() => {
-    dispatch(getCategories());
+    if(!hasPrev){
+      dispatch(getCategories(1));
+      console.log(hasPrev);
+    }
   }, []);
 
   return (
     <>
-      <div className="w-full bg-secondary rounded-md">
+      <div className="w-full bg-secondary rounded-md pb-4">
         <div className="p-4">
           <Button
             onClick={openAddCategory}
@@ -82,7 +92,9 @@ export const CategoryList = () => {
             );
           })}
         </ul>
+        {hasNext && <Button loading={loading} onClick={loadMore} className="mx-auto block mt-4" title={"Load more"} />}
       </div>
+
 
       {/* MODALS */}
 

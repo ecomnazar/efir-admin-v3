@@ -14,6 +14,8 @@ export const categorySlice = createSlice({
       data: [] as GCategory[],
       loading: false,
       error: false,
+      next: false,
+      prev: false
     },
     activeCategory: {} as GCategory, // need one active category to edit category
     addCategoryLoading: false, // to show loading in add category button
@@ -35,9 +37,15 @@ export const categorySlice = createSlice({
       })
       .addCase(
         getCategories.fulfilled,
-        (state, action: PayloadAction<{ results: GCategory[] }>) => {
-          state.categories.data = action.payload.results;
+        (state, action: PayloadAction<{ next: (string | null), previous: (string | null), results: GCategory[] }>) => {
+          if(state.categories.prev === true){
+            state.categories.data = [...state.categories.data, ...action.payload.results]
+          } else {
+            state.categories.data = action.payload.results;
+            state.categories.prev = action.payload.previous === null ? true : false
+          }
           state.categories.loading = false;
+          state.categories.next = action.payload.next ? true : false
         }
       )
       .addCase(getCategories.rejected, (state) => {

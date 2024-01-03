@@ -6,11 +6,9 @@ import { API_ENDPOINTS } from "@/shared/api/endpoints";
 
 export const getCategories = createAsyncThunk(
   "category/getCategories",
-  async () => {
+  async (page: number = 1) => {
     try {
-      const response = await instanceSecond.get(`${API_ENDPOINTS.CATEGORY}?page=1&amount=20`);
-      console.log(response.data);
-      
+      const response = await instanceSecond.get(`${API_ENDPOINTS.CATEGORY}?page=${page}&amount=20`);
       return response.data;
     } catch (error) {
       return Promise.reject(error);
