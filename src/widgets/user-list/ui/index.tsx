@@ -12,10 +12,13 @@ export const UserList = () => {
   const dispatch = useAppDispatch();
   const users = useAppSelector((state) => state.userSlice.users.data);
   const hasNext = useAppSelector((state) => state.userSlice.users.next);
+  const hasPrev = useAppSelector((state) => state.userSlice.users.prev);
   const loading = useAppSelector((state) => state.userSlice.users.loading);
 
   React.useEffect(() => {
-    dispatch(getUsers(1));
+    if(!hasPrev){
+      dispatch(getUsers(1));
+    }
   }, []);
 
   const loadMore = () => {};
