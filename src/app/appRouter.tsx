@@ -9,6 +9,7 @@ import { ChannelPage } from "@/pages/channel";
 import { PostPage } from "@/pages/post";
 import { HistoryPage } from "@/pages/history";
 import { UserPage } from "@/pages/user";
+import UserProfile from "@/pages/user/user-profile/ui/page";
 
 export const appRouter = () =>
   createBrowserRouter([
@@ -27,8 +28,17 @@ export const appRouter = () =>
               element: <DashboardPage />,
             },
             {
-              path: "/user",
-              element: <UserPage />,
+              path: "user",
+              children: [
+                {
+                  path: 'list',
+                  element: <UserPage />
+                },
+                {
+                  path: "profile/:id",
+                  element: <UserProfile />,
+                },
+              ],
             },
             {
               path: "/history",

@@ -15,17 +15,21 @@ export const categorySlice = createSlice({
       loading: false,
       error: false,
       next: false,
-      prev: false
+      prev: false,
     },
     activeCategory: {} as GCategory, // need one active category to edit category
     addCategoryLoading: false, // to show loading in add category button
     updateCategoryLoading: false, // to show loading in edit category button
-    deleteCategoryLoading: false // // to show loading in delete category button
+    deleteCategoryLoading: false, // to show loading in delete category button
+    nextPage: 2 // to get data with pagination
   },
   reducers: {
     setActiveCategory(state, action: PayloadAction<GCategory>) {
       state.activeCategory = action.payload;
     },
+    setNextPage(state){
+      state.nextPage = state.nextPage + 1
+    }
   },
   extraReducers(builder) {
     builder
@@ -44,8 +48,8 @@ export const categorySlice = createSlice({
             state.categories.data = action.payload.results;
             state.categories.prev = action.payload.previous === null ? true : false
           }
-          state.categories.loading = false;
           state.categories.next = action.payload.next ? true : false
+          state.categories.loading = false;
         }
       )
       .addCase(getCategories.rejected, (state) => {
@@ -109,4 +113,4 @@ export const categorySlice = createSlice({
   },
 });
 
-export const { setActiveCategory } = categorySlice.actions;
+export const { setActiveCategory, setNextPage } = categorySlice.actions;

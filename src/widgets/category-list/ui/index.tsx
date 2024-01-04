@@ -9,6 +9,7 @@ import {
   DeleteCategoryModal,
   EditCategoryModal,
   setActiveCategory,
+  setNextPage,
 } from "@/entities/category";
 import { GCategory } from "@/entities/category/model/interfaces";
 import { getCategories } from "@/entities/category/api/categoryApi";
@@ -27,7 +28,7 @@ export const CategoryList = () => {
   const hasPrev = useAppSelector(
     (state) => state.categorySlice.categories.prev
   );
-  const [page, setPage] = React.useState(2);
+  const nextPage = useAppSelector((state) => state.categorySlice.nextPage)
 
   const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] =
     React.useState(false);
@@ -53,14 +54,13 @@ export const CategoryList = () => {
   };
 
   const loadMore = () => {
-    dispatch(getCategories(page));
-    setPage((prev) => prev + 1);
+    dispatch(getCategories(nextPage));
+    dispatch(setNextPage())
   };
 
   React.useEffect(() => {
     if (!hasPrev) {
       dispatch(getCategories(1));
-      console.log(hasPrev);
     }
   }, []);
 

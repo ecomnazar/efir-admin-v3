@@ -7,9 +7,10 @@ export const userSlice = createSlice({
     initialState: {
         users: {
             data: [] as GUser[],
-            next: true,
             loading: false,
-            error: false
+            error: false,
+            next: false,
+            prev: false
         },
         user: {
             data: {} as GUser,
@@ -33,8 +34,13 @@ export const userSlice = createSlice({
             .addCase(getUsers.pending, (state) => {
                 state.users.loading = true
             })
-            .addCase(getUsers.fulfilled, (state, action: PayloadAction<{next: string, results: GUser[]}>) => {
-                state.users.data = [...state.users.data, ...action.payload.results]
+            .addCase(getUsers.fulfilled, (state, action: PayloadAction<{next: string, previous: string, results: GUser[]}>) => {
+                if(state.users.prev === true){
+                    state.users.data = [...state.users.data, ...action.payload.results]
+                } else {
+                    state.users.data = action.payload.results
+                    state.users.prev = action.payload.previous === null ? true : false
+                }
                 state.users.next = action.payload.next ? true : false
                 state.users.loading = false
             })
