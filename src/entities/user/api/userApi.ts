@@ -6,7 +6,7 @@ import { API_ENDPOINTS } from "@/shared/api/endpoints";
 
 export const getUsers = createAsyncThunk('user/getUsers', async (page: number) => {
     try {
-        const response = await instance.get(`${API_ENDPOINTS.USERS}?page=${page}&amount=5`)
+        const response = await instance.get(`${API_ENDPOINTS.USERS}?page=${page}&amount=10`)
         return response.data
     } catch(error) {
         return Promise.reject(error)
@@ -63,6 +63,7 @@ export const deleteUser = createAsyncThunk('user/deleteUser', async (id: string)
             data: { id }
         })
         toast.success('Пользователь успешно удален')
+        return id
     } catch(error) {
         toast.error('Пользователь не удален')
         return Promise.reject(error)

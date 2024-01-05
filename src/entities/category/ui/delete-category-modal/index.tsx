@@ -14,7 +14,7 @@ export const DeleteCategoryModal = ({ isOpen, setIsOpen }: Props) => {
   const dispatch = useAppDispatch();
   const category = useAppSelector((state) => state.categorySlice.activeCategory);
   const { handleSubmit } = useForm();
-  const loading = useAppSelector((state) => state.categorySlice.addCategoryLoading);
+  const loading = useAppSelector((state) => state.categorySlice.deleteCategoryLoading);
 
   const onSubmit = async () => {
     await dispatch(deleteCategory(category.id));

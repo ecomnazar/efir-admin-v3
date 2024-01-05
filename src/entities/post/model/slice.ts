@@ -1,6 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { GPost } from "@/entities/post/model/interfaces";
-import { getPosts, getPost, getUserPosts, addPost } from "@/entities/post/api/postApi";
+import {
+  getPosts,
+  getPost,
+  getUserPosts,
+  addPost,
+} from "@/entities/post/api/postApi";
 
 export const postSlice = createSlice({
   name: "postSlice",
@@ -9,7 +14,9 @@ export const postSlice = createSlice({
       data: [] as GPost[],
       loading: false,
       error: false,
-      next: true
+      prev: false,
+      next: true,
+      nextPage: 2
     },
     post: {
       data: {} as GPost,
@@ -20,10 +27,14 @@ export const postSlice = createSlice({
       data: [] as GPost[],
       loading: false,
       error: false,
-      next: true
+      next: true,
     },
   },
-  reducers: {},
+  reducers: {
+    setPostsNextPage(state){
+      state.posts.nextPage = state.posts.nextPage + 1
+    }
+  },
   extraReducers(builder) {
     builder
 
@@ -32,12 +43,24 @@ export const postSlice = createSlice({
       .addCase(getPosts.pending, (state) => {
         state.posts.loading = true;
       })
-      .addCase(getPosts.fulfilled, (state, action: PayloadAction<{next: string, results: GPost[]}>) => {
-        state.posts.data = [...state.posts.data, ...action.payload.results];
-        // state.posts.data = action.payload.results
-        state.posts.loading = false;
-        state.posts.next = action.payload.next ? true : false
-      })
+      .addCase(getPosts.fulfilled,(
+          state,
+          action: PayloadAction<{
+            next: string;
+            previous: string;
+            results: GPost[];
+          }>
+        ) => {
+          if (action.payload.previous === null) {
+            state.posts.data = action.payload.results;
+            state.posts.prev = true;
+          } else {
+            state.posts.data = [...state.posts.data, ...action.payload.results];
+          }
+          state.posts.loading = false;
+          state.posts.next = action.payload.next ? true : false;
+        }
+      )
       .addCase(getPosts.rejected, (state) => {
         state.posts.error = true;
       })
@@ -60,11 +83,14 @@ export const postSlice = createSlice({
       .addCase(getUserPosts.pending, (state) => {
         state.userPosts.loading = true;
       })
-      .addCase(getUserPosts.fulfilled, (state, action: PayloadAction<{ next: string, results: GPost[] }>) => {
-        state.userPosts.data = action.payload.results;
-        state.userPosts.next = action.payload.next ? true : false
-        state.userPosts.loading = false;
-      })
+      .addCase(
+        getUserPosts.fulfilled,
+        (state, action: PayloadAction<{ next: string; results: GPost[] }>) => {
+          state.userPosts.data = action.payload.results;
+          state.userPosts.next = action.payload.next ? true : false;
+          state.userPosts.loading = false;
+        }
+      )
       .addCase(getUserPosts.rejected, (state) => {
         state.userPosts.error = true;
       })
@@ -72,9 +98,10 @@ export const postSlice = createSlice({
       // add post
 
       .addCase(addPost.fulfilled, (state, action: PayloadAction<GPost>) => {
-        window.location.replace(`/post/single/${action.payload.id}`)
-        state.userPosts.data = [action.payload, ...state.userPosts.data]
-      })
-
+        window.location.replace(`/post/single/${action.payload.id}`);
+        state.userPosts.data = [action.payload, ...state.userPosts.data];
+      });
   },
 });
+
+export const { setPostsNextPage } = postSlice.actions;

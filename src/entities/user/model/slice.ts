@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { GUser } from "@/entities/user/model/interfaces"
-import { getUsers, getUser, getUsersAsChannel, addUser } from "@/entities/user/api/userApi"
+import { getUsers, getUser, getUsersAsChannel, addUser, deleteUser } from "@/entities/user/api/userApi"
 
 export const userSlice = createSlice({
     name: "userSlice",
@@ -29,9 +29,15 @@ export const userSlice = createSlice({
             data: {} as GUser,
             loading: false,
             error: false
-        }
+        },
+        activeUser: {} as GUser, // need one active category to edit category
+        deleteUserLoading: false, // to show loading in delete category button
+
     },
     reducers: {
+        setActiveUser(state, action: PayloadAction<GUser>) {
+            state.activeUser = action.payload;
+          },
         setUsersNextPage: (state) => {
             state.users.nextPage = state.users.nextPage + 1
         }
@@ -97,7 +103,20 @@ export const userSlice = createSlice({
                 window.location.replace('/user/profile/' + id)
             })
 
+            // delete user 
+
+            .addCase(deleteUser.pending, (state) => {
+                state.deleteUserLoading = true
+            })
+            .addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
+                state.users.data = state.users.data.filter((user) => user.id !== action.payload)
+                state.deleteUserLoading = false
+            })
+            .addCase(deleteUser.rejected, (state) => {
+                state.deleteUserLoading = true
+            })
+
     },
 })
 
-export const { setUsersNextPage } = userSlice.actions
+export const { setUsersNextPage, setActiveUser } = userSlice.actions

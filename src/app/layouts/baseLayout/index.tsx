@@ -6,7 +6,7 @@ export const BaseLayout = () => {
   return (
     <div className="w-screen h-screen flex items-start justify-between bg-background text-textColor">
       <nav
-        className={`fixed w-[275px] bg-secondary h-full shadow-boxShadow p-4 flex flex-col gap-y-1`}
+        className={`fixed w-[200px] lg:w-[275px] bg-secondary h-full shadow-boxShadow p-4 flex flex-col gap-y-1`}
       >
         {navbarLinks.map((link, i) => {
           return (
@@ -20,7 +20,7 @@ export const BaseLayout = () => {
           );
         })}
       </nav>
-      <main className={`ml-auto w-[calc(100vw-275px)] p-4 h-full`}>
+      <main className={`ml-auto w-[calc(100vw-200px)] lg:w-[calc(100vw-275px)] p-4 h-full`}>
         <Outlet />
       </main>
       {/* <div className="bg-[#e3e3e3] w-screen h-[100px] flex gap-x-2 absolute bottom-0 left-0">

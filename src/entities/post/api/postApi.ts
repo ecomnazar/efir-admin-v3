@@ -8,7 +8,7 @@ import { API_ENDPOINTS } from "@/shared/api/endpoints";
 
 export const getPosts = createAsyncThunk('post/getPosts', async (page: number) => {
     try {
-        const response = await instanceSecond.get(`${API_ENDPOINTS.POSTS}?page=${page}&amount=20`)
+        const response = await instanceSecond.get(`${API_ENDPOINTS.POSTS}?page=${page}&amount=10`)
         return response.data
     } catch (error) {
         return Promise.reject(error)

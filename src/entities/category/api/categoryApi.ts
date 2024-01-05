@@ -8,7 +8,7 @@ export const getCategories = createAsyncThunk(
   "category/getCategories",
   async (page: number = 1) => {
     try {
-      const response = await instanceSecond.get(`${API_ENDPOINTS.CATEGORY}?page=${page}&amount=20`);
+      const response = await instanceSecond.get(`${API_ENDPOINTS.CATEGORY}?page=${page}&amount=10`);
       return response.data;
     } catch (error) {
       return Promise.reject(error);

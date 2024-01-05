@@ -42,11 +42,11 @@ export const categorySlice = createSlice({
       .addCase(
         getCategories.fulfilled,
         (state, action: PayloadAction<{ next: (string | null), previous: (string | null), results: GCategory[] }>) => {
-          if(state.categories.prev === true){
-            state.categories.data = [...state.categories.data, ...action.payload.results]
+          if(action.payload.previous === null){
+            state.categories.data = action.payload.results
+            state.categories.prev = true
           } else {
-            state.categories.data = action.payload.results;
-            state.categories.prev = action.payload.previous === null ? true : false
+            state.categories.data = [...state.categories.data, ...action.payload.results]
           }
           state.categories.next = action.payload.next ? true : false
           state.categories.loading = false;
