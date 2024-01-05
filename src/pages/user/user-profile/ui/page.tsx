@@ -1,24 +1,26 @@
 import React from "react";
 import clsx from "clsx";
+import dateFormat from "dateformat";
 import { getUser } from "@/entities/user/api/userApi";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import UserPostList from "@/widgets/user-post-list/ui";
-import dateFormat from "dateformat";
 import { useParams } from "react-router-dom";
+import { SecondaryLayout } from "@/shared/ui/layouts";
+import { Hr } from "@/shared/ui/hr";
 
-const UserProfile = () => {
+export const UserProfile = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.userSlice.user.data);
-  
+
   React.useEffect(() => {
-    dispatch(getUser(id!))
+    dispatch(getUser(id!));
   }, []);
 
   return (
     <div className="flex items-start justify-between">
-      <div className="bg-secondary basis-[33%] rounded-md p-4">
+      <SecondaryLayout>
         {user?.avatar ? (
           <img
             className="w-[125px] h-[125px] rounded-md object-cover object-center mx-auto"
@@ -30,7 +32,7 @@ const UserProfile = () => {
         <h1 className="text-center text-textColor text-[28px] font-[500]">
           {user?.username}
         </h1>
-        <hr className="w-full h-[1px] outline-none border-none bg-primary/20 my-4" />
+       <Hr />
         <div>
           <h3 className="text-primary/70 text-[14px]">DETAILS</h3>
           <ul className="mt-2">
@@ -74,10 +76,8 @@ const UserProfile = () => {
             </li>
           </ul>
         </div>
-      </div>
+      </SecondaryLayout>
       <UserPostList />
     </div>
   );
 };
-
-export default UserProfile;

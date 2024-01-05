@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 
 interface Props extends React.HTMLAttributes<HTMLInputElement> {
@@ -5,9 +6,10 @@ interface Props extends React.HTMLAttributes<HTMLInputElement> {
   placeholder?: string;
   register?: any;
   registerName?: string;
+  variant?: 'primary' | 'secondary'
 }
 
-export const Input: React.FC<Props> = ({ labelText, placeholder, register, registerName, ...props }) => {
+export const Input: React.FC<Props> = ({ labelText, placeholder, register, registerName, variant, ...props }) => {
   return (
     <div className="flex flex-col mt-2 gap-y-1">
       {labelText && (
@@ -18,7 +20,9 @@ export const Input: React.FC<Props> = ({ labelText, placeholder, register, regis
       <input
         {...props}
         {...register(registerName)}
-        className="border focus:border-primary  focus:pl-4 transition-all text-background focus:shadow-inputShadow font-[300] outline-none rounded-md text-[15px] px-3 py-[6px]"
+        className={clsx("border focus:border-primary  focus:pl-4 transition-all text-background focus:shadow-inputShadow font-[300] outline-none rounded-md text-[15px] px-3 py-[6px]", {
+          ['bg-transparent text-white border-primary']: variant === 'secondary'
+        })}
         type="text"
         placeholder={placeholder}
       />

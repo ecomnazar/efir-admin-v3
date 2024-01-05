@@ -9,7 +9,8 @@ import { ChannelPage } from "@/pages/channel";
 import { PostPage } from "@/pages/post";
 import { HistoryPage } from "@/pages/history";
 import { UserPage } from "@/pages/user";
-import UserProfile from "@/pages/user/user-profile/ui/page";
+import { UserProfile } from "@/pages/user/user-profile";
+import { SinglePost } from "@/pages/post/single-post";
 
 export const appRouter = () =>
   createBrowserRouter([
@@ -45,8 +46,17 @@ export const appRouter = () =>
               element: <HistoryPage />,
             },
             {
-              path: "/post",
-              element: <PostPage />,
+              path: "post",
+              children: [
+                {
+                  path: "list",
+                  element: <PostPage />,
+                },
+                {
+                  path: "single/:id",
+                  element: <SinglePost />,
+                }
+              ]
             },
             {
               path: "/category",
