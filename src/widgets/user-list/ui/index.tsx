@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { TbTrash } from "react-icons/tb";
 import { FiEdit } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
+import { setUsersNextPage } from "@/entities/user/model/slice";
 
 export const UserList = () => {
   const dispatch = useAppDispatch();
@@ -15,6 +16,7 @@ export const UserList = () => {
   const hasNext = useAppSelector((state) => state.userSlice.users.next);
   const hasPrev = useAppSelector((state) => state.userSlice.users.prev);
   const loading = useAppSelector((state) => state.userSlice.users.loading);
+  const nextPage = useAppSelector((state) => state.userSlice.users.nextPage)
 
   React.useEffect(() => {
     if(!hasPrev){
@@ -22,7 +24,10 @@ export const UserList = () => {
     }
   }, []);
 
-  const loadMore = () => {};
+  const loadMore = () => {
+    dispatch(getUsers(nextPage));
+    dispatch(setUsersNextPage())
+  };
 
   return (
     <>

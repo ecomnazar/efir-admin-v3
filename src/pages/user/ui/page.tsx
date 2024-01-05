@@ -1,5 +1,7 @@
 import { UserList } from "@/widgets/user-list"
 
+// add: user profile data update
+
 export const UserPage = () => {
   return (
     <section>

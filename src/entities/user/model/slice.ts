@@ -10,7 +10,8 @@ export const userSlice = createSlice({
             loading: false,
             error: false,
             next: false,
-            prev: false
+            prev: false,
+            nextPage: 2
         },
         user: {
             data: {} as GUser,
@@ -19,9 +20,10 @@ export const userSlice = createSlice({
         },
         usersAsChannel: {
             data: [] as GUser[],
-            next: true,
             loading: false,
-            error: false
+            error: false,
+            next: false,
+            prev: false
         },
         addUser: {
             data: {} as GUser,
@@ -30,6 +32,9 @@ export const userSlice = createSlice({
         }
     },
     reducers: {
+        setUsersNextPage: (state) => {
+            state.users.nextPage = state.users.nextPage + 1
+        }
     },
     extraReducers(builder) {
         builder
@@ -94,3 +99,5 @@ export const userSlice = createSlice({
 
     },
 })
+
+export const { setUsersNextPage } = userSlice.actions
