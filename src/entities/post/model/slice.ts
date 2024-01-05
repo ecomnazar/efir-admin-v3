@@ -72,6 +72,7 @@ export const postSlice = createSlice({
       // add post
 
       .addCase(addPost.fulfilled, (state, action: PayloadAction<GPost>) => {
+        window.location.replace(`/post/single/${action.payload.id}`)
         state.userPosts.data = [action.payload, ...state.userPosts.data]
       })
 

@@ -24,7 +24,7 @@ const UserPostList = () => {
             className="h-[395px] bg-background rounded-md p-4"
           >
             <img
-              className="aspect-square object-fit object-cover rounded-md"
+              className="aspect-square object-fit object-cover w-full rounded-md"
               src={post.is_video ? post.thumbnail : post.images[0]}
               alt=""
             />

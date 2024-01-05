@@ -6,10 +6,11 @@ import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import clsx from "clsx";
 import { TbTrash } from "react-icons/tb";
 import { FiEdit } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const UserList = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
   const users = useAppSelector((state) => state.userSlice.users.data);
   const hasNext = useAppSelector((state) => state.userSlice.users.next);
   const hasPrev = useAppSelector((state) => state.userSlice.users.prev);
@@ -28,7 +29,7 @@ export const UserList = () => {
       <div className="w-full bg-secondary rounded-md pb-4">
         <div className="p-4">
           <Button
-            // onClick={openAddCategory}
+            onClick={() => navigate('/user/create')}
             className="ml-auto block"
             title="Add User"
           />

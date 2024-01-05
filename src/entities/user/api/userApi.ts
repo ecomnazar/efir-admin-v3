@@ -33,12 +33,13 @@ export const getUser = createAsyncThunk('user/getUser', async (id: string) => {
 
 export const addUser = createAsyncThunk('user/addUser', async (data: PUser | any) => {
     try {
-        await instance.post(`${API_ENDPOINTS.USERS}`, data, {
+        const response = await instance.post(`${API_ENDPOINTS.USERS}`, data, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         })
         toast.success('Пользователь успешно добавлен')
+        return response.data
     } catch(error) {
         toast.error('Пользователь не добавлен')
         toast.error('Пользователь с таким именом существует')

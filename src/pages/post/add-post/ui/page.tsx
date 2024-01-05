@@ -1,85 +1,58 @@
-import React from "react";
 import dateFormat from "dateformat";
-import { addPost, getPost, updatePost } from "@/entities/post/api/postApi";
-import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
-import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
+import { SelectFileButton } from "@/entities/select-file-button";
+import { Button } from "@/shared/ui/button";
 import { Hr } from "@/shared/ui/hr";
 import { Input } from "@/shared/ui/input";
 import { PrimaryLayout, SecondaryLayout } from "@/shared/ui/layouts";
+import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { Button } from "@/shared/ui/button";
-import { SelectFileButton } from "@/entities/select-file-button";
-
-// features to be implemented: delete and update method
+import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
+import { addPost } from "@/entities/post/api/postApi";
 
 interface FormProps {
   description: string;
   tags: string;
 }
 
-export const SinglePostPage = () => {
+export const AddPostPage = () => {
   const { id } = useParams();
-  const { register, handleSubmit, reset } = useForm<FormProps>();
-  const dispatch = useAppDispatch();
-  const post = useAppSelector((state) => state.postSlice.post.data);
-  const loadingPost = useAppSelector((state) => state.postSlice.post.loading);
-  const [images, setImages] = React.useState<string[]>([]);
-
-  // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+  const dispatch = useAppDispatch()
+  const { register, handleSubmit } = useForm<FormProps>();
+  const [images, setImages] = React.useState<File[]>([]);
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event?.target?.files) {
       const files = [];
       for (let index = 0; index < event.target.files.length; index++) {
-        files.push(URL.createObjectURL(event?.target?.files[index]));
+        files.push(event?.target?.files[index]);
       }
       setImages([...images, ...files]);
     }
   };
 
-  const onDeleteImage = (image: string) => {
-    const filteredImages = images.filter((img) => img !== image);
-    setImages(filteredImages);
-  };
-
   const onSubmit: SubmitHandler<FormProps> = ({ description, tags }) => {
-    const formData = new FormData();
-    formData.append("user", post.user.id);
-    formData.append("description", description);
-    formData.append("tags", tags);
-    formData.append("is_commentable", "False");
+    const fd = new FormData();
+    fd.append("user", id!);
+    fd.append("description", description);
+    fd.append("tags", tags);
+    fd.append("is_commentable", "False");
     for (let index = 0; index < images.length; index++) {
-      formData.append(`image_${index + 1}`, images[index]);
+      fd.append(`image_${index + 1}`, images[index]);
     }
-    dispatch(updatePost(formData))
+    dispatch(addPost(fd))
   };
 
-  // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+  const onDeleteImage = (i: number) => {
+    const filtered = images.filter((_, index) => index !== i);
+    setImages(filtered);
+  };
 
-  React.useEffect(() => {
-    dispatch(getPost(id!));
-  }, []);
-
-  React.useEffect(() => {
-    const defaultValue = {
-      description: post?.description,
-      tags: post?.tags,
-    };
-    setImages(post?.images);
-    reset(defaultValue);
-  }, [post]);
-
-  // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-
-  return loadingPost ? (
-    <div className="text-3xl">Loading...</div>
-  ) : (
+  return (
     <div className="flex justify-between items-start">
       <PrimaryLayout className="">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg">Post information</h2>
-          <p>{dateFormat(post?.created_at, "dd/mm/yyyy")}</p>
+          <h2 className="text-lg">Add post</h2>
         </div>
         <div className="gap-x-4 grid grid-cols-2">
           <Input
@@ -91,7 +64,7 @@ export const SinglePostPage = () => {
           />
         </div>
         <div className=" gap-x-4 grid grid-cols-2">
-        <Input
+          <Input
             register={register}
             registerName="tags"
             labelText="Tags"
@@ -108,16 +81,16 @@ export const SinglePostPage = () => {
       <SecondaryLayout>
         <div className="grid grid-cols-2 gap-2">
           {images &&
-            images.map((image) => {
+            images.map((image, i) => {
               return (
-                <div key={image} className="rounded-md bg-background p-2">
+                <div key={i} className="rounded-md bg-background p-2">
                   <img
                     className="rounded-md aspect-square object-cover object-center"
-                    src={image}
+                    src={URL.createObjectURL(image)}
                   />
                   <Hr className="!my-2" />
                   <button
-                    onClick={() => onDeleteImage(image)}
+                    onClick={() => onDeleteImage(i)}
                     className="text-[13px] text-center mx-auto block"
                   >
                     Delete file

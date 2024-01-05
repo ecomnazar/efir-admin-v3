@@ -9,8 +9,10 @@ import { ChannelPage } from "@/pages/channel";
 import { PostPage } from "@/pages/post";
 import { HistoryPage } from "@/pages/history";
 import { UserPage } from "@/pages/user";
-import { UserProfile } from "@/pages/user/user-profile";
-import { SinglePost } from "@/pages/post/single-post";
+import { UserCreate } from "@/pages/user/user-create";
+import { SinglePostPage } from "@/pages/post/single-post";
+import { UserProfilePage } from "@/pages/user/user-profile";
+import { AddPostPage } from "@/pages/post/add-post";
 
 export const appRouter = () =>
   createBrowserRouter([
@@ -37,8 +39,12 @@ export const appRouter = () =>
                 },
                 {
                   path: "profile/:id",
-                  element: <UserProfile />,
+                  element: <UserProfilePage />,
                 },
+                {
+                  path: 'create',
+                  element: <UserCreate />
+                }
               ],
             },
             {
@@ -54,7 +60,11 @@ export const appRouter = () =>
                 },
                 {
                   path: "single/:id",
-                  element: <SinglePost />,
+                  element: <SinglePostPage />,
+                },
+                {
+                  path: 'create/:id',
+                  element: <AddPostPage />
                 }
               ]
             },

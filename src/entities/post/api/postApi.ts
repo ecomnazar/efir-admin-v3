@@ -47,7 +47,7 @@ export const addPost = createAsyncThunk('post/addPost', async (data: PPost | any
             }
         })
         toast.success('Пост успешнло добавлен')
-        return response.data        
+        return response.data
     } catch (error) {
         toast.error('Пост не добавлен')
         return Promise.reject(error)

@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { GUser } from "@/entities/user/model/interfaces"
-import { getUsers, getUser, getUsersAsChannel } from "@/entities/user/api/userApi"
+import { getUsers, getUser, getUsersAsChannel, addUser } from "@/entities/user/api/userApi"
 
 export const userSlice = createSlice({
     name: "userSlice",
@@ -20,6 +20,11 @@ export const userSlice = createSlice({
         usersAsChannel: {
             data: [] as GUser[],
             next: true,
+            loading: false,
+            error: false
+        },
+        addUser: {
+            data: {} as GUser,
             loading: false,
             error: false
         }
@@ -74,6 +79,17 @@ export const userSlice = createSlice({
             .addCase(getUsersAsChannel.rejected, (state) => {
                 state.usersAsChannel.loading = false
                 state.usersAsChannel.error = true
+            })
+
+            // add user 
+
+            .addCase(addUser.pending, (state) => {
+                state.addUser.loading = true
+            })
+            .addCase(addUser.fulfilled, (state, action: PayloadAction<GUser>) => {
+                const id = action.payload.id
+                state.users.data.push(action.payload)
+                window.location.replace('/user/profile/' + id)
             })
 
     },
