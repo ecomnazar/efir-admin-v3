@@ -1,9 +1,9 @@
 import React from "react";
+import clsx from "clsx";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { getUsers } from "@/entities/user/api/userApi";
 import { Button } from "@/shared/ui/button";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
-import clsx from "clsx";
 import { TbTrash } from "react-icons/tb";
 import { FiEdit } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,36 +13,37 @@ import { GUser } from "@/entities/user/model/interfaces";
 
 export const UserList = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const users = useAppSelector((state) => state.userSlice.users.data);
   const hasNext = useAppSelector((state) => state.userSlice.users.next);
   const hasPrev = useAppSelector((state) => state.userSlice.users.prev);
   const loading = useAppSelector((state) => state.userSlice.users.loading);
-  const nextPage = useAppSelector((state) => state.userSlice.users.nextPage)
-  const [isOpenDeleteUserModal, setIsOpenDeleteUserModal] = React.useState(false);
+  const nextPage = useAppSelector((state) => state.userSlice.users.nextPage);
+  const [isOpenDeleteUserModal, setIsOpenDeleteUserModal] =
+    React.useState(false);
 
   React.useEffect(() => {
-    if(!hasPrev){
+    if (!hasPrev) {
       dispatch(getUsers(1));
     }
   }, []);
 
   const loadMore = () => {
     dispatch(getUsers(nextPage));
-    dispatch(setUsersNextPage())
+    dispatch(setUsersNextPage());
   };
 
   const openDeleteUser = (user: GUser) => {
-    dispatch(setActiveUser(user))
-    setIsOpenDeleteUserModal(true)
-  }
+    dispatch(setActiveUser(user));
+    setIsOpenDeleteUserModal(true);
+  };
 
   return (
     <>
       <div className="w-full bg-secondary rounded-md pb-4">
         <div className="p-4">
           <Button
-            onClick={() => navigate('/user/create')}
+            onClick={() => navigate("/user/create")}
             className="ml-auto block"
             title="Add User"
           />
@@ -120,8 +121,10 @@ export const UserList = () => {
 
       {/* MODALS */}
 
-      <DeleteUserModal isOpen={isOpenDeleteUserModal} setIsOpen={setIsOpenDeleteUserModal} />
-
+      <DeleteUserModal
+        isOpen={isOpenDeleteUserModal}
+        setIsOpen={setIsOpenDeleteUserModal}
+      />
     </>
   );
 };

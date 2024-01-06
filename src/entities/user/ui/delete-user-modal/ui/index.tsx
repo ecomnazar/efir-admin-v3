@@ -13,8 +13,8 @@ interface Props {
 
 export const DeleteUserModal = ({ isOpen, setIsOpen }: Props) => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.userSlice.activeUser);
   const { handleSubmit } = useForm();
+  const user = useAppSelector((state) => state.userSlice.activeUser);
   const loading = useAppSelector((state) => state.userSlice.deleteUserLoading);
 
   const onSubmit = async () => {

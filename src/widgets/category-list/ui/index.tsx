@@ -4,44 +4,23 @@ import { TbTrash } from "react-icons/tb";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { Button } from "@/shared/ui/button";
-import {
-  AddCategoryModal,
-  DeleteCategoryModal,
-  EditCategoryModal,
-  setActiveCategory,
-  setNextPage,
-} from "@/entities/category";
+import { AddCategoryModal, DeleteCategoryModal, EditCategoryModal, setActiveCategory, setNextPage } from "@/entities/category";
 import { GCategory } from "@/entities/category/model/interfaces";
 import { getCategories } from "@/entities/category/api/categoryApi";
 
 export const CategoryList = () => {
   const dispatch = useAppDispatch();
-  const categrories = useAppSelector(
-    (state) => state.categorySlice.categories.data
-  );
-  const loading = useAppSelector(
-    (state) => state.categorySlice.categories.loading
-  );
-  const hasNext = useAppSelector(
-    (state) => state.categorySlice.categories.next
-  );
-  const hasPrev = useAppSelector(
-    (state) => state.categorySlice.categories.prev
-  );
-  const nextPage = useAppSelector((state) => state.categorySlice.nextPage)
+  const categrories = useAppSelector((state) => state.categorySlice.categories.data);
+  const loading = useAppSelector((state) => state.categorySlice.categories.loading);
+  const hasNext = useAppSelector((state) => state.categorySlice.categories.next);
+  const hasPrev = useAppSelector((state) => state.categorySlice.categories.prev);
+  const nextPage = useAppSelector((state) => state.categorySlice.nextPage);
 
-  const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] =
-    React.useState(false);
+  const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] = React.useState(false);
+  const [isOpenEditCategoryModal, setIsOpenEditCategoryModal] = React.useState(false);
+  const [isOpenDeleteCategoryModal, setIsOpenDeleteCategoryModal] = React.useState(false);
 
-  const [isOpenEditCategoryModal, setIsOpenEditCategoryModal] =
-    React.useState(false);
-
-  const [isOpenDeleteCategoryModal, setIsOpenDeleteCategoryModal] =
-    React.useState(false);
-
-  const openAddCategory = () => {
-    setIsOpenAddCategoryModal(true);
-  };
+  const openAddCategory = () => setIsOpenAddCategoryModal(true);
 
   const openEditCategory = (category: GCategory) => {
     dispatch(setActiveCategory(category));
@@ -53,10 +32,10 @@ export const CategoryList = () => {
     setIsOpenDeleteCategoryModal(true);
   };
 
-  const loadMore = () => {
+  function loadMore() {
     dispatch(getCategories(nextPage));
-    dispatch(setNextPage())
-  };
+    dispatch(setNextPage());
+  }
 
   React.useEffect(() => {
     if (!hasPrev) {

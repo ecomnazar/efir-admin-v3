@@ -6,6 +6,9 @@ import { useAppSelector } from '@/shared/lib/hooks/useAppSelector'
 import { Button } from '@/shared/ui/button'
 import React from 'react'
 
+// add: user profile data update
+
+
 export const PostPage = () => {
   
   const dispatch = useAppDispatch()
