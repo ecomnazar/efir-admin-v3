@@ -102,7 +102,7 @@ export const UserCreate = () => {
             </div>
           )}
         </div>
-        <SelectFileButton onFileChange={onFileChange} inputRef={inputRef} />
+        <SelectFileButton onFileChange={onFileChange} />
       </SecondaryLayout>
     </div>
   );

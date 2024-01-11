@@ -13,6 +13,8 @@ import { UserCreate } from "@/pages/user/user-create";
 import { SinglePostPage } from "@/pages/post/single-post";
 import { UserProfilePage } from "@/pages/user/user-profile";
 import { AddPostPage } from "@/pages/post/add-post";
+import { SingleChannelPage } from "@/pages/channel/single-channel/ui/page";
+import { CreateChannelPage } from "@/pages/channel/create-channel";
 
 export const appRouter = () =>
   createBrowserRouter([
@@ -73,8 +75,22 @@ export const appRouter = () =>
               element: <CategoryPage />,
             },
             {
-              path: "/channel",
-              element: <ChannelPage />,
+              path: "channel",
+              children: [
+                {
+                  path: 'list',
+                  element: <ChannelPage />
+                },
+                {
+                  path: "single/:id",
+                  element: <SingleChannelPage />
+                },
+                {
+                  path: 'create',
+                  element: <CreateChannelPage />
+
+                }
+              ]
             },
             {
               path: "/admin",

@@ -1,0 +1,1 @@
+export * as default from "@/entities/channel/model/slice"
