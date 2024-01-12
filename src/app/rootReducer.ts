@@ -1,3 +1,4 @@
+import { adminSlice } from "@/entities/admin/model/slice";
 import { categorySlice } from "@/entities/category/model/slice";
 import { channelSlice } from "@/entities/channel/model/slice";
 import { postSlice } from "@/entities/post/model/slice";
@@ -11,4 +12,5 @@ export const rootReducer = combineReducers({
   userSlice: userSlice.reducer,
   postSlice: postSlice.reducer,
   channelSlice: channelSlice.reducer,
+  adminSlice: adminSlice.reducer,
 });

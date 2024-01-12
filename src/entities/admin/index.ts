@@ -1,0 +1,1 @@
+export * as default from "@/entities/admin/model/slice"

@@ -9,6 +9,7 @@ import { PrimaryLayout, SecondaryLayout } from '@/shared/ui/layouts'
 import { Select } from '@/shared/ui/select'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { getCategories } from '@/entities/category/api/categoryApi'
+import { useNavigate } from 'react-router-dom'
 
 interface SelectDTOProps {
     name: string;
@@ -21,6 +22,7 @@ interface FormProps {
 
 export const CreateChannelPage = () => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate()
     const [image, setImage] = React.useState<File>();
     const { register, handleSubmit } = useForm<FormProps>();
     const loading = useAppSelector((state) => state.channelSlice.addChannelLoading);
@@ -29,7 +31,7 @@ export const CreateChannelPage = () => {
     const nextPage = useAppSelector((state) => state.categorySlice.nextPage)
     const hasNext = useAppSelector((state) => state.categorySlice.categories.next)
 
-    const [selected, setSelected] = React.useState({ name: 'asd', id: '0' });
+    const [selected, setSelected] = React.useState({ name: 'Выберите категорию', id: '0' });
 
     const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event?.target?.files) {
@@ -43,12 +45,13 @@ export const CreateChannelPage = () => {
         if (categories.length === 0) onGetCategories()
     }, [])
 
-    const onSubmit: SubmitHandler<FormProps> = ({ channelName }) => {
+    const onSubmit: SubmitHandler<FormProps> = async ({ channelName }) => {
         const fd = new FormData();
         fd.append("name", channelName);
         fd.append("category", selected.id);
         fd.append("avatar", image!);
-        dispatch(addChannel(fd));
+        await dispatch(addChannel(fd));
+        navigate('/channel/list')
     };
 
     const categoriesDTO = () => {

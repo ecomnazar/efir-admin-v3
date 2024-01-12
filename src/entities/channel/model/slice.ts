@@ -10,6 +10,7 @@ export const channelSlice = createSlice({
       loading: false,
       error: false,
       next: true,
+      nextPage: 1,
     },
     addChannelLoading: false, // to show loading in add channel button
   },
@@ -28,9 +29,17 @@ export const channelSlice = createSlice({
           state,
           action: PayloadAction<{ next: string; results: GChannel[] }>
         ) => {
-          state.channels.data = action.payload.results;
+          if (state.channels.data.length === 0) {
+            state.channels.data = action.payload.results;
+          } else {
+            state.channels.data = [
+              ...state.channels.data,
+              ...action.payload.results,
+            ];
+          }
           state.channels.loading = false;
           state.channels.next = action.payload.next ? true : false;
+          state.channels.nextPage = state.channels.nextPage + 1;
         }
       )
       .addCase(getChannels.rejected, (state) => {

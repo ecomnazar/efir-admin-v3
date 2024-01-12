@@ -4,9 +4,10 @@ import { TbTrash } from "react-icons/tb";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { Button } from "@/shared/ui/button";
-import { AddCategoryModal, DeleteCategoryModal, EditCategoryModal, setActiveCategory } from "@/entities/category";
+import { AddCategoryModal, EditCategoryModal, setActiveCategory } from "@/entities/category";
 import { GCategory } from "@/entities/category/model/interfaces";
-import { getCategories } from "@/entities/category/api/categoryApi";
+import { deleteCategory, getCategories } from "@/entities/category/api/categoryApi";
+import { DeleteConfirmModal } from "@/shared/ui/modal/delete-confirm-modal";
 
 export const CategoryList = () => {
   const dispatch = useAppDispatch();
@@ -20,6 +21,8 @@ export const CategoryList = () => {
   const [isOpenEditCategoryModal, setIsOpenEditCategoryModal] = React.useState(false);
   const [isOpenDeleteCategoryModal, setIsOpenDeleteCategoryModal] = React.useState(false);
 
+  const activeCategory = useAppSelector((state) => state.categorySlice.activeCategory)
+
   const openAddCategory = () => setIsOpenAddCategoryModal(true);
 
   const openEditCategory = (category: GCategory) => {
@@ -31,6 +34,11 @@ export const CategoryList = () => {
     dispatch(setActiveCategory(category));
     setIsOpenDeleteCategoryModal(true);
   };
+
+  const onDeleteCategory = async () => {
+    await dispatch(deleteCategory(activeCategory.id))
+    setIsOpenDeleteCategoryModal(false)
+  }
 
   const loadMore = () => dispatch(getCategories(nextPage))
 
@@ -98,9 +106,9 @@ export const CategoryList = () => {
         setIsOpen={setIsOpenEditCategoryModal}
       />
 
-      <DeleteCategoryModal
-        isOpen={isOpenDeleteCategoryModal}
+      <DeleteConfirmModal isOpen={isOpenDeleteCategoryModal}
         setIsOpen={setIsOpenDeleteCategoryModal}
+        handleClick={onDeleteCategory}
       />
     </>
   );

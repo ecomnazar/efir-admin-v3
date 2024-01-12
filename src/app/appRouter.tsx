@@ -15,6 +15,8 @@ import { UserProfilePage } from "@/pages/user/user-profile";
 import { AddPostPage } from "@/pages/post/add-post";
 import { SingleChannelPage } from "@/pages/channel/single-channel/ui/page";
 import { CreateChannelPage } from "@/pages/channel/create-channel";
+import { AdminEditPage } from "@/pages/admin/admin-edit";
+import { AdminCreatePage } from "@/pages/admin/admin-create";
 
 export const appRouter = () =>
   createBrowserRouter([
@@ -93,8 +95,21 @@ export const appRouter = () =>
               ]
             },
             {
-              path: "/admin",
-              element: <AdminPage />,
+              path: "admin",
+              children: [
+                {
+                  path: 'list',
+                  element: <AdminPage />
+                },
+                {
+                  path: 'edit/:id',
+                  element: <AdminEditPage />
+                },
+                {
+                  path: 'create',
+                  element: <AdminCreatePage />
+                }
+              ]
             },
           ],
         },

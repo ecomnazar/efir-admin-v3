@@ -5,5 +5,5 @@ export const navbarLinks = [
   { text: "Posts", url: "/post/list" },
   { text: "Categories", url: "/category" },
   { text: "Channels", url: "/channel/list" },
-  { text: "Admins", url: "/admin" },
+  { text: "Admins", url: "/admin/list" },
 ];
