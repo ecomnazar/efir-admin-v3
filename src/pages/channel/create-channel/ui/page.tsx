@@ -8,15 +8,12 @@ import { Input } from '@/shared/ui/input'
 import { PrimaryLayout, SecondaryLayout } from '@/shared/ui/layouts'
 import { Select } from '@/shared/ui/select'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { getCategories } from '@/entities/category/api/categoryApi'
 
-const people = [
-    "Wade Cooper",
-    "Arlene Mccoy",
-    "Devon Webb",
-    "Tom Cook",
-    "Tanya Fox",
-    "Hellen Schmidt",
-];
+interface SelectDTOProps {
+    name: string;
+    id: string;
+}
 
 interface FormProps {
     channelName: string;
@@ -24,10 +21,15 @@ interface FormProps {
 
 export const CreateChannelPage = () => {
     const dispatch = useAppDispatch();
-    const [selected, setSelected] = React.useState(people[0]);
-    const { register, handleSubmit } = useForm<FormProps>();
     const [image, setImage] = React.useState<File>();
-    const loading = useAppSelector((state) => state.userSlice.addUser.loading);
+    const { register, handleSubmit } = useForm<FormProps>();
+    const loading = useAppSelector((state) => state.channelSlice.addChannelLoading);
+    const categoriesLoading = useAppSelector((state) => state.categorySlice.categories.loading)
+    const categories = useAppSelector((state) => state.categorySlice.categories.data)
+    const nextPage = useAppSelector((state) => state.categorySlice.nextPage)
+    const hasNext = useAppSelector((state) => state.categorySlice.categories.next)
+
+    const [selected, setSelected] = React.useState({ name: 'asd', id: '0' });
 
     const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event?.target?.files) {
@@ -35,13 +37,30 @@ export const CreateChannelPage = () => {
         }
     };
 
+    const onGetCategories = () => dispatch(getCategories(nextPage))
+
+    React.useEffect(() => {
+        if (categories.length === 0) onGetCategories()
+    }, [])
+
     const onSubmit: SubmitHandler<FormProps> = ({ channelName }) => {
         const fd = new FormData();
         fd.append("name", channelName);
-        fd.append("category", selected);
+        fd.append("category", selected.id);
         fd.append("avatar", image!);
         dispatch(addChannel(fd));
     };
+
+    const categoriesDTO = () => {
+        const newData: SelectDTOProps[] = []
+        categories?.map((elem) => {
+            newData.push({
+                id: elem.id,
+                name: elem.name
+            })
+        })
+        return newData
+    }
 
     return (
         <div className="flex items-start justify-between">
@@ -56,7 +75,7 @@ export const CreateChannelPage = () => {
                     />
                 </div>
                 <div className="gap-x-4 grid grid-cols-2 mt-2">
-                    <Select selected={selected} setSelected={setSelected} data={people} />
+                    <Select selected={selected} setSelected={setSelected} data={categoriesDTO()} onClickLoadMore={onGetCategories} hasNext={hasNext} buttonLoading={categoriesLoading} />
                 </div>
                 <Button
                     loading={loading}

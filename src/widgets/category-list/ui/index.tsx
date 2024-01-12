@@ -4,7 +4,7 @@ import { TbTrash } from "react-icons/tb";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { Button } from "@/shared/ui/button";
-import { AddCategoryModal, DeleteCategoryModal, EditCategoryModal, setActiveCategory, setNextPage } from "@/entities/category";
+import { AddCategoryModal, DeleteCategoryModal, EditCategoryModal, setActiveCategory } from "@/entities/category";
 import { GCategory } from "@/entities/category/model/interfaces";
 import { getCategories } from "@/entities/category/api/categoryApi";
 
@@ -32,14 +32,11 @@ export const CategoryList = () => {
     setIsOpenDeleteCategoryModal(true);
   };
 
-  function loadMore() {
-    dispatch(getCategories(nextPage));
-    dispatch(setNextPage());
-  }
+  const loadMore = () => dispatch(getCategories(nextPage))
 
   React.useEffect(() => {
     if (!hasPrev) {
-      dispatch(getCategories(1));
+      dispatch(getCategories(nextPage));
     }
   }, []);
 

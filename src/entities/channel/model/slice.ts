@@ -11,6 +11,7 @@ export const channelSlice = createSlice({
       error: false,
       next: true,
     },
+    addChannelLoading: false, // to show loading in add channel button
   },
   reducers: {},
   extraReducers(builder) {
@@ -38,11 +39,20 @@ export const channelSlice = createSlice({
 
       // add channel
 
+      .addCase(addChannel.pending, (state) => {
+        state.addChannelLoading = true;
+      })
+
       .addCase(
         addChannel.fulfilled,
         (state, action: PayloadAction<GChannel>) => {
           state.channels.data = [...state.channels.data, action.payload];
+          state.addChannelLoading = false;
         }
-      );
+      )
+
+      .addCase(addChannel.rejected, (state) => {
+        state.addChannelLoading = false;
+      });
   },
 });

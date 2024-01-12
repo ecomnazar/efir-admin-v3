@@ -82,7 +82,7 @@ export const UserCreate = () => {
           />
         </div>
         <div className="gap-x-4 grid grid-cols-2 mt-2">
-          <Select selected={selected} setSelected={setSelected} data={people} />
+          {/* <Select selected={selected} setSelected={setSelected} data={people} /> */}
         </div>
         <Button
           loading={loading}

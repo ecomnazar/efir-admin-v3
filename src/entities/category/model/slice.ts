@@ -21,15 +21,12 @@ export const categorySlice = createSlice({
     addCategoryLoading: false, // to show loading in add category button
     updateCategoryLoading: false, // to show loading in edit category button
     deleteCategoryLoading: false, // to show loading in delete category button
-    nextPage: 2 // to get data with pagination
+    nextPage: 1, // to get data with pagination
   },
   reducers: {
     setActiveCategory(state, action: PayloadAction<GCategory>) {
       state.activeCategory = action.payload;
     },
-    setNextPage(state){
-      state.nextPage = state.nextPage + 1
-    }
   },
   extraReducers(builder) {
     builder
@@ -41,14 +38,25 @@ export const categorySlice = createSlice({
       })
       .addCase(
         getCategories.fulfilled,
-        (state, action: PayloadAction<{ next: (string | null), previous: (string | null), results: GCategory[] }>) => {
-          if(action.payload.previous === null){
-            state.categories.data = action.payload.results
-            state.categories.prev = true
+        (
+          state,
+          action: PayloadAction<{
+            next: string | null;
+            previous: string | null;
+            results: GCategory[];
+          }>
+        ) => {
+          if (action.payload.previous === null) {
+            state.categories.data = action.payload.results;
+            state.categories.prev = true;
           } else {
-            state.categories.data = [...state.categories.data, ...action.payload.results]
+            state.categories.data = [
+              ...state.categories.data,
+              ...action.payload.results,
+            ];
           }
-          state.categories.next = action.payload.next ? true : false
+          state.nextPage = state.nextPage + 1;
+          state.categories.next = action.payload.next ? true : false;
           state.categories.loading = false;
         }
       )
@@ -83,8 +91,10 @@ export const categorySlice = createSlice({
       .addCase(
         updateCategory.fulfilled,
         (state, action: PayloadAction<GCategory>) => {
-          const foundIndex = state.categories.data.findIndex((item) => item.id === action.payload.id)
-          state.categories.data[foundIndex] = action.payload
+          const foundIndex = state.categories.data.findIndex(
+            (item) => item.id === action.payload.id
+          );
+          state.categories.data[foundIndex] = action.payload;
           state.updateCategoryLoading = false;
         }
       )
@@ -96,21 +106,23 @@ export const categorySlice = createSlice({
       // delete category
 
       .addCase(deleteCategory.pending, (state) => {
-        state.deleteCategoryLoading = true
+        state.deleteCategoryLoading = true;
       })
 
       .addCase(
         deleteCategory.fulfilled,
         (state, action: PayloadAction<string>) => {
-          state.categories.data = state.categories.data.filter((category) => category.id !== action.payload);
-          state.deleteCategoryLoading = true
+          state.categories.data = state.categories.data.filter(
+            (category) => category.id !== action.payload
+          );
+          state.deleteCategoryLoading = true;
         }
       )
 
       .addCase(deleteCategory.rejected, (state) => {
-        state.deleteCategoryLoading = false
-      })
+        state.deleteCategoryLoading = false;
+      });
   },
 });
 
-export const { setActiveCategory, setNextPage } = categorySlice.actions;
+export const { setActiveCategory } = categorySlice.actions;
