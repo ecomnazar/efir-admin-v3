@@ -32,7 +32,7 @@ export const SinglePostPage = () => {
     if (event?.target?.files) {
       const files = [];
       for (let index = 0; index < event.target.files.length; index++) {
-        files.push(URL.createObjectURL(event?.target?.files[index]));
+        files.push(event?.target?.files[index]);
       }
       setImages([...images, ...files]);
     }
@@ -44,15 +44,16 @@ export const SinglePostPage = () => {
   };
 
   const onSubmit: SubmitHandler<FormProps> = ({ description, tags }) => {
-    const formData = new FormData();
-    formData.append("user", post.user.id);
-    formData.append("description", description);
-    formData.append("tags", tags);
-    formData.append("is_commentable", "False");
+    const fd = new FormData();
+    fd.append("id", post.id)
+    fd.append("user", post.user.id);
+    fd.append("description", description);
+    fd.append("tags", tags);
+    fd.append("is_commentable", "False");
     for (let index = 0; index < images.length; index++) {
-      formData.append(`image_${index + 1}`, images[index]);
+      fd.append(`image_${index + 1}`, images[index]);
     }
-    dispatch(updatePost(formData))
+    dispatch(updatePost(fd))
   };
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
@@ -61,11 +62,16 @@ export const SinglePostPage = () => {
     dispatch(getPost(id!));
   }, []);
 
+
+  console.log(post);
+
+
   React.useEffect(() => {
     const defaultValue = {
       description: post?.description,
       tags: post?.tags,
     };
+
     setImages(post?.images);
     reset(defaultValue);
   }, [post]);
@@ -91,7 +97,7 @@ export const SinglePostPage = () => {
           />
         </div>
         <div className=" gap-x-4 grid grid-cols-2">
-        <Input
+          <Input
             register={register}
             registerName="tags"
             labelText="Tags"

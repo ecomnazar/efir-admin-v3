@@ -9,7 +9,7 @@ export const getUsers = createAsyncThunk(
   async (page: number) => {
     try {
       const response = await instance.get(
-        `${API_ENDPOINTS.USERS}?page=${page}&amount=2`
+        `${API_ENDPOINTS.USERS}?page=${page}&amount=10`
       );
       return response.data;
     } catch (error) {

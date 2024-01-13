@@ -11,7 +11,7 @@ export const getChannels = createAsyncThunk(
   async (page: number) => {
     try {
       const response = await instanceSecond.get(
-        `${API_ENDPOINTS.CHANNEL}?page=${page}&amount=2`
+        `${API_ENDPOINTS.CHANNEL}?page=${page}&amount=20`
       );
       return response.data;
     } catch (error) {

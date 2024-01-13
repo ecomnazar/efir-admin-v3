@@ -3,9 +3,10 @@ import React from "react";
 
 interface Props {
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  contentType?: 'image' | 'video'
 }
 
-export const SelectFileButton = ({ onFileChange }: Props) => {
+export const SelectFileButton = ({ onFileChange, contentType = 'image' }: Props) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
   return (
     <>
@@ -19,6 +20,7 @@ export const SelectFileButton = ({ onFileChange }: Props) => {
         className="hidden"
         ref={inputRef}
         type="file"
+        accept={`${contentType}/*`}
         multiple
       />
     </>

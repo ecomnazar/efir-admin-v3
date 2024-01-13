@@ -8,6 +8,7 @@ import { PrimaryLayout, SecondaryLayout } from "@/shared/ui/layouts";
 import { Select } from "@/shared/ui/select";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 // just add validation, city and region
 
@@ -31,7 +32,7 @@ export const UserCreate = () => {
   const [selected, setSelected] = React.useState(people[0]);
   const { register, handleSubmit } = useForm<FormProps>();
   const [image, setImage] = React.useState<File>();
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const navigate = useNavigate()
   const loading = useAppSelector((state) => state.userSlice.addUser.loading);
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +41,7 @@ export const UserCreate = () => {
     }
   };
 
-  const onSubmit: SubmitHandler<FormProps> = ({ username, bio, address }) => {
+  const onSubmit: SubmitHandler<FormProps> = async ({ username, bio, address }) => {
     const fd = new FormData();
     fd.append("username", username);
     fd.append("bio", bio);
@@ -49,7 +50,8 @@ export const UserCreate = () => {
     fd.append("city", "1");
     fd.append("is_channel", "True");
     fd.append("avatar", image!);
-    dispatch(addUser(fd));
+    await dispatch(addUser(fd));
+    navigate('/user/list')
   };
 
   return (
@@ -81,9 +83,9 @@ export const UserCreate = () => {
             variant="secondary"
           />
         </div>
-        <div className="gap-x-4 grid grid-cols-2 mt-2">
-          {/* <Select selected={selected} setSelected={setSelected} data={people} /> */}
-        </div>
+        {/* <div className="gap-x-4 grid grid-cols-2 mt-2">
+          <Select selected={selected} setSelected={setSelected} data={people} />
+        </div> */}
         <Button
           loading={loading}
           onClick={handleSubmit(onSubmit)}

@@ -23,7 +23,8 @@
     "react-icons": "^4.12.0",
     "react-loader-spinner": "^6.1.6",
     "react-redux": "^9.0.4",
-    "react-router-dom": "^6.21.1"
+    "react-router-dom": "^6.21.1",
+    "video.js": "^8.9.0"
   },
   "devDependencies": {
     "@types/dateformat": "^5.0.2",

@@ -13,9 +13,10 @@ export interface GPost {
   updated_at: string;
   // type?: string;
   thumbnail?: string;
+  m3u8: string;
   user: {
     id: string;
     username: string;
     avatar: string;
   };
-};
+}

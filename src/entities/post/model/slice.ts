@@ -16,7 +16,7 @@ export const postSlice = createSlice({
       error: false,
       prev: false,
       next: true,
-      nextPage: 2
+      nextPage: 2,
     },
     post: {
       data: {} as GPost,
@@ -29,11 +29,12 @@ export const postSlice = createSlice({
       error: false,
       next: true,
     },
+    addPostLoading: false, // to show loading in add post button
   },
   reducers: {
-    setPostsNextPage(state){
-      state.posts.nextPage = state.posts.nextPage + 1
-    }
+    setPostsNextPage(state) {
+      state.posts.nextPage = state.posts.nextPage + 1;
+    },
   },
   extraReducers(builder) {
     builder
@@ -43,7 +44,9 @@ export const postSlice = createSlice({
       .addCase(getPosts.pending, (state) => {
         state.posts.loading = true;
       })
-      .addCase(getPosts.fulfilled,(
+      .addCase(
+        getPosts.fulfilled,
+        (
           state,
           action: PayloadAction<{
             next: string;
@@ -97,9 +100,17 @@ export const postSlice = createSlice({
 
       // add post
 
+      .addCase(addPost.pending, (state) => {
+        state.addPostLoading = true;
+      })
+
       .addCase(addPost.fulfilled, (state, action: PayloadAction<GPost>) => {
-        window.location.replace(`/post/single/${action.payload.id}`);
         state.userPosts.data = [action.payload, ...state.userPosts.data];
+        state.addPostLoading = false;
+      })
+
+      .addCase(addPost.rejected, (state) => {
+        state.addPostLoading = false;
       });
   },
 });
