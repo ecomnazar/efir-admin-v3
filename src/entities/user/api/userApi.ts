@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { PUser, PUserPremium } from "@/entities/user/api/interfaces";
+import { PUser, PUserPremium, UUser } from "@/entities/user/api/interfaces";
 import toast from "react-hot-toast";
 import { instance } from "@/shared/api/instance";
 import { API_ENDPOINTS } from "@/shared/api/endpoints";
@@ -41,6 +41,18 @@ export const getUser = createAsyncThunk("user/getUser", async (id: string) => {
   }
 });
 
+export const searchUser = createAsyncThunk(
+  "user/searchUser",
+  async (query: string) => {
+    try {
+      const response = await instance.get(`${API_ENDPOINTS.USERS}?q=${query}`);
+      return response.data;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+);
+
 export const addUser = createAsyncThunk(
   "user/addUser",
   async (data: PUser | any) => {
@@ -62,10 +74,13 @@ export const addUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   "user/updateUser",
-  async (data: PUser) => {
+  async (data: UUser) => {
+    console.log(data.id);
+
     try {
-      await instance.put(`${API_ENDPOINTS.USERS}`, data);
+      const response = await instance.patch(`${API_ENDPOINTS.USERS}`, data);
       toast.success("Пользователь успешно обновлен");
+      return response.data;
     } catch (error) {
       toast.error("Пользователь не обновлен");
       return Promise.reject(error);

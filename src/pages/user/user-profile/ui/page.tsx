@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import dateFormat from "dateformat";
-import { destroyUserPremium, getUser, makeUserPremium } from "@/entities/user/api/userApi";
+import { destroyUserPremium, getUser, makeUserPremium, updateUser } from "@/entities/user/api/userApi";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import UserPostList from "@/widgets/user-post-list/ui";
@@ -14,6 +14,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 interface FormProps {
   period: number
+  post_limit: number;
 }
 
 export const UserProfilePage = () => {
@@ -30,6 +31,10 @@ export const UserProfilePage = () => {
 
   const onDestroyPremium = () => {
     dispatch(destroyUserPremium(id!))
+  }
+
+  const onUpdateLimit: SubmitHandler<FormProps> = ({ post_limit }) => {
+    dispatch(updateUser({ id: id!, post_limit }))
   }
 
   React.useEffect(() => {
@@ -109,11 +114,17 @@ export const UserProfilePage = () => {
               </>
             }
           </ul>
-          <div className="flex items-center gap-x-2">
-            <Input register={register} registerName="period" placeholder="Premium period" variant="secondary" />
-            <Button onClick={handleSubmit(onSubmitPremium)} title={"Add"} className="!h-[37px] mt-2" />
+          <div className="flex flex-col gap-y-2">
+            <div className="flex items-center gap-x-2">
+              <Input register={register} registerName="post_limit" placeholder="Post limit" variant="secondary" />
+              <Button onClick={handleSubmit(onUpdateLimit)} title={"Add"} className="!h-[37px]" />
+            </div>
+            <div className="flex items-center gap-x-2">
+              <Input register={register} registerName="period" placeholder="Premium period" variant="secondary" />
+              <Button onClick={handleSubmit(onSubmitPremium)} title={"Add"} className="!h-[37px]" />
+            </div>
           </div>
-          <Button onClick={handleSubmit(onDestroyPremium)} title={"Destroy premium"} className="!h-[37px] mt-2 bg-red/35 w-full" />
+          {user.is_premium && <Button onClick={handleSubmit(onDestroyPremium)} title={"Destroy premium"} className="!h-[37px] mt-2 bg-red/35 w-full" />}
           <Button onClick={() => navigate(`/post/create/${user?.id}`)} className="mt-2 w-full" title={"Add post"} />
         </div>
       </SecondaryLayout>

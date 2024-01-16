@@ -13,3 +13,8 @@ export interface PUserPremium {
   id: string;
   period: number;
 }
+
+export interface UUser {
+  id: string;
+  post_limit: number;
+}

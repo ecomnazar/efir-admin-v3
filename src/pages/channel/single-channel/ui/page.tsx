@@ -70,7 +70,7 @@ export const SingleChannelPage = () => {
                 {channel?.stories?.map((story) => {
                     return (
                         <div key={story.id} className='aspect-[9/16] bg-primary'>
-                            <img className='w-full h-full object-cover object-center' src={story.image} alt="" />
+                            {story.type === 'video' ? <video className='w-full h-full object-cover object-center' src={story.video} controls /> : <img className='w-full h-full object-cover object-center' src={story.image} alt="" />}
                         </div>
                     )
                 })}

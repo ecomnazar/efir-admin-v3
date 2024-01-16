@@ -3,6 +3,7 @@ import {
   addHistoryImage,
   addHistoryVideo,
   getHistories,
+  getHistory,
 } from "@/entities/history/api/historyApi";
 import { GHistory } from "@/entities/history/model/interfaces";
 
@@ -15,6 +16,11 @@ export const historySlice = createSlice({
       error: false,
       next: true,
       nextPage: 1,
+    },
+    history: {
+      data: {} as GHistory,
+      loading: false,
+      error: false,
     },
     addHistoryLoading: false,
   },
@@ -48,6 +54,22 @@ export const historySlice = createSlice({
       )
       .addCase(getHistories.rejected, (state) => {
         state.histories.error = true;
+      })
+
+      // get historiy
+
+      .addCase(getHistory.pending, (state) => {
+        state.history.loading = true;
+      })
+      .addCase(
+        getHistory.fulfilled,
+        (state, action: PayloadAction<GHistory>) => {
+          state.history.data = action.payload;
+          state.history.loading = false;
+        }
+      )
+      .addCase(getHistory.rejected, (state) => {
+        state.history.loading = false;
       })
 
       // add history image

@@ -1,7 +1,7 @@
 import React from 'react'
 import { addHistoryImage } from '@/entities/history/api/historyApi'
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { PrimaryLayout, SecondaryLayout } from '@/shared/ui/layouts'
 import { Input } from '@/shared/ui/input'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -19,6 +19,7 @@ interface FormProps {
 export const AddHistoryPage = () => {
     const { id } = useParams()
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const { register, handleSubmit } = useForm<FormProps>()
     const loading = useAppSelector((state) => state.historySlice.addHistoryLoading)
     const [isVideo, setIsVideo] = React.useState(false)
@@ -31,7 +32,7 @@ export const AddHistoryPage = () => {
             for (let index = 0; index < event.target.files.length; index++) {
                 files.push(event?.target?.files[index]);
             }
-            setImages([...images, ...files]);
+            setImages(files);
         }
     };
 
@@ -40,13 +41,14 @@ export const AddHistoryPage = () => {
         setImages([])
     }
 
-    const onSubmit: SubmitHandler<FormProps> = ({ link }) => {
+    const onSubmit: SubmitHandler<FormProps> = async ({ link }) => {
         const fd = new FormData()
         fd.append('channel', id!)
         fd.append('type', isVideo ? 'video' : 'image')
         fd.append('link', link)
         isVideo ? fd.append('video', images[0]) : fd.append('image', images[0])
-        dispatch(addHistoryImage(fd))
+        await dispatch(addHistoryImage(fd))
+        navigate(`/channel/single/${id}`)
     }
 
     return (

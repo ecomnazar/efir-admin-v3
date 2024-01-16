@@ -19,7 +19,7 @@ export const PostCard = ({ post, className }: Props) => {
         src={post.is_video ? post.thumbnail : post.images[0]}
         alt=""
       />
-    
+
       <div className="mt-2">
         <p className="text-[12px] lg:text-[15px] whitespace-nowrap overflow-clip">
           Description: <span className="text-[11px] lg:text-[13px]">{post.description}</span>

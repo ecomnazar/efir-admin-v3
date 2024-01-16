@@ -11,7 +11,7 @@ interface Props extends React.HTMLAttributes<HTMLInputElement> {
 
 export const Input: React.FC<Props> = ({ labelText, placeholder, register, registerName, variant, ...props }) => {
   return (
-    <div className="flex flex-col mt-2 gap-y-1">
+    <div className="flex flex-col gap-y-1">
       {labelText && (
         <label className="text-[13px]" htmlFor="">
           {labelText}

@@ -6,6 +6,10 @@ import {
   getUsersAsChannel,
   addUser,
   deleteUser,
+  searchUser,
+  updateUser,
+  makeUserPremium,
+  destroyUserPremium,
 } from "@/entities/user/api/userApi";
 
 export const userSlice = createSlice({
@@ -38,6 +42,7 @@ export const userSlice = createSlice({
     },
     activeUser: {} as GUser, // need one active category to edit category
     deleteUserLoading: false, // to show loading in delete category button
+    searchUserLoading: false, // to show loading in search button
   },
   reducers: {
     setActiveUser(state, action: PayloadAction<GUser>) {
@@ -113,15 +118,44 @@ export const userSlice = createSlice({
         state.usersAsChannel.error = true;
       })
 
+      // search user
+
+      .addCase(searchUser.pending, (state) => {
+        state.searchUserLoading = true;
+      })
+
+      .addCase(
+        searchUser.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            next: string;
+            previous: string;
+            results: GUser[];
+          }>
+        ) => {
+          if (action.payload.previous === null) {
+            state.users.data = action.payload.results;
+          }
+          state.searchUserLoading = false;
+        }
+      )
+
+      .addCase(searchUser.rejected, (state) => {
+        state.searchUserLoading = false;
+      })
+
       // add user
 
       .addCase(addUser.pending, (state) => {
         state.addUser.loading = true;
       })
+
       .addCase(addUser.fulfilled, (state, action: PayloadAction<GUser>) => {
         state.users.data.push(action.payload);
         state.addUser.loading = false;
       })
+
       .addCase(addUser.rejected, (state) => {
         state.addUser.loading = false;
       })
@@ -131,15 +165,41 @@ export const userSlice = createSlice({
       .addCase(deleteUser.pending, (state) => {
         state.deleteUserLoading = true;
       })
+
       .addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
         state.users.data = state.users.data.filter(
           (user) => user.id !== action.payload
         );
         state.deleteUserLoading = false;
       })
+
       .addCase(deleteUser.rejected, (state) => {
         state.deleteUserLoading = true;
-      });
+      })
+
+      // update user
+
+      .addCase(updateUser.fulfilled, (state, action: PayloadAction<GUser>) => {
+        state.user.data = action.payload;
+      })
+
+      // set premium to user
+
+      .addCase(
+        makeUserPremium.fulfilled,
+        (state, action: PayloadAction<GUser>) => {
+          state.user.data = action.payload;
+        }
+      )
+
+      // destroy premium from user
+
+      .addCase(
+        destroyUserPremium.fulfilled,
+        (state, action: PayloadAction<GUser>) => {
+          state.user.data = action.payload;
+        }
+      );
   },
 });
 
