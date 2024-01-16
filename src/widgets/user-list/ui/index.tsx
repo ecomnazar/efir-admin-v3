@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { setActiveUser, setUsersNextPage } from "@/entities/user/model/slice";
 import { DeleteUserModal } from "@/entities/user";
 import { GUser } from "@/entities/user/model/interfaces";
+import { Badge } from "@/shared/ui/badge";
 
 export const UserList = () => {
   const dispatch = useAppDispatch();
@@ -83,17 +84,9 @@ export const UserList = () => {
                   {user.data.post_count}
                 </div>
                 <div className="basis-[20%] text-[16px]">
-                  <div
-                    className={clsx(
-                      "inline-block  text-[13px] rounded-md py-1 px-3",
-                      {
-                        ["text-green bg-green/30"]: user.is_premium === true,
-                        ["text-red bg-red/30"]: user.is_premium === false,
-                      }
-                    )}
-                  >
-                    {user.is_premium ? "Active" : "Disabled"}
-                  </div>
+                  <Badge title={user.is_premium ? 'Active' : 'Disabled'} className={
+                    user.is_premium === true ? "text-green !bg-green/30" : 'text-red !bg-red/30'
+                  } />
                 </div>
                 <div className="basis-[15%] text-[16px] text-right">
                   <div className="flex items-center justify-end gap-x-4">

@@ -1,6 +1,6 @@
 import React from "react";
 import dateFormat from "dateformat";
-import { addPost, getPost, updatePost } from "@/entities/post/api/postApi";
+import { getPost, updatePost } from "@/entities/post/api/postApi";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { Hr } from "@/shared/ui/hr";
@@ -12,6 +12,8 @@ import { Button } from "@/shared/ui/button";
 import { SelectFileButton } from "@/entities/select-file-button";
 
 // features to be implemented: delete and update method
+// MUST HAVE - Onclick one post open as big modal video and
+
 
 interface FormProps {
   description: string;
