@@ -16,6 +16,7 @@ export const historySlice = createSlice({
       next: true,
       nextPage: 1,
     },
+    addHistoryLoading: false,
   },
   reducers: {},
   extraReducers(builder) {
@@ -51,20 +52,38 @@ export const historySlice = createSlice({
 
       // add history image
 
+      .addCase(addHistoryImage.pending, (state) => {
+        state.addHistoryLoading = true;
+      })
+
       .addCase(
         addHistoryImage.fulfilled,
         (state, action: PayloadAction<GHistory>) => {
           state.histories.data = [...state.histories.data, action.payload];
+          state.addHistoryLoading = false;
         }
       )
 
+      .addCase(addHistoryImage.rejected, (state) => {
+        state.addHistoryLoading = false;
+      })
+
       // add history video
+
+      .addCase(addHistoryVideo.pending, (state) => {
+        state.addHistoryLoading = true;
+      })
 
       .addCase(
         addHistoryVideo.fulfilled,
         (state, action: PayloadAction<GHistory>) => {
           state.histories.data = [action.payload, ...state.histories.data];
+          state.addHistoryLoading = false;
         }
-      );
+      )
+
+      .addCase(addHistoryVideo.rejected, (state) => {
+        state.addHistoryLoading = false;
+      });
   },
 });

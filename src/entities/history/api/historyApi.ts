@@ -20,6 +20,22 @@ export const getHistories = createAsyncThunk(
   }
 );
 
+// get one history
+
+export const getHistory = createAsyncThunk(
+  "history/getHistory",
+  async (id: string) => {
+    try {
+      const response = await instanceSecond.get(
+        `${API_ENDPOINTS.STORIES}?id=${id}`
+      );
+      return response.data;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+);
+
 // add history image
 
 export const addHistoryImage = createAsyncThunk(

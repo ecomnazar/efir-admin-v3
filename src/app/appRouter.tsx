@@ -17,6 +17,8 @@ import { SingleChannelPage } from "@/pages/channel/single-channel/ui/page";
 import { CreateChannelPage } from "@/pages/channel/create-channel";
 import { AdminEditPage } from "@/pages/admin/admin-edit";
 import { AdminCreatePage } from "@/pages/admin/admin-create";
+import { SingleHistoryPage } from "@/pages/history/single-history";
+import { AddHistoryPage } from "@/pages/history/add-history";
 
 export const appRouter = () =>
   createBrowserRouter([
@@ -52,8 +54,21 @@ export const appRouter = () =>
               ],
             },
             {
-              path: "/history",
-              element: <HistoryPage />,
+              path: "history",
+              children: [
+                {
+                  path: 'list',
+                  element: <HistoryPage />,
+                },
+                {
+                  path: 'single/:id',
+                  element: <SingleHistoryPage />,
+                },
+                {
+                  path: 'create/:id',
+                  element: <AddHistoryPage />,
+                }
+              ]
             },
             {
               path: "post",

@@ -21,17 +21,14 @@ export const SingleChannelPage = () => {
     const channel = useAppSelector((state) => state.channelSlice.channel.data)
     const loading = useAppSelector((state) => state.channelSlice.channel.loading)
 
-    console.log(channel?.stories && channel.stories[0]);
-
-
-    const onEditChannel = () => {
-
-    }
+    const onEditChannel = () => { }
 
     const ondeleteChannel = async () => {
         await dispatch(deleteChannel(id!))
         navigate('/channel/list')
     }
+
+    const onAddChannel = () => navigate(`/history/create/${id}`)
 
     React.useEffect(() => {
         dispatch(getChannel(id!))
@@ -66,7 +63,7 @@ export const SingleChannelPage = () => {
                     </div>
                     <Button onClick={onEditChannel} className="mt-2 w-full bg-primary/30" title={"Save profile changes"} />
                     <Button onClick={ondeleteChannel} className="mt-2 w-full bg-red/30" title={"Delete channel"} />
-                    <Button onClick={onEditChannel} className="mt-2 w-full" title={"Add history"} />
+                    <Button onClick={onAddChannel} className="mt-2 w-full" title={"Add history"} />
                 </div>
             </SecondaryLayout>
             <PrimaryLayout className="grid grid-cols-3 gap-4 mt-4">

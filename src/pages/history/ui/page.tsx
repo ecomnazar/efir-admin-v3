@@ -1,8 +1,9 @@
+import React from 'react'
+import { Link } from 'react-router-dom'
 import { getHistories } from '@/entities/history/api/historyApi'
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch'
 import { useAppSelector } from '@/shared/lib/hooks/useAppSelector'
 import { Button } from '@/shared/ui/button'
-import React from 'react'
 
 export const HistoryPage = () => {
   const dispatch = useAppDispatch()
@@ -11,15 +12,10 @@ export const HistoryPage = () => {
   const hasNext = useAppSelector((state) => state.historySlice.histories.next)
   const nextPage = useAppSelector((state) => state.historySlice.histories.nextPage)
 
-
-  const loadMore = () => {
-    dispatch(getHistories(nextPage))
-  }
+  const loadMore = () => dispatch(getHistories(nextPage))
 
   React.useEffect(() => {
-    if (histories.length === 0) {
-      dispatch(getHistories(nextPage))
-    }
+    if (histories.length === 0) loadMore()
   }, [])
 
   return (
@@ -27,10 +23,15 @@ export const HistoryPage = () => {
     <div className='bg-secondary rounded-md p-4'>
       <div className='grid grid-cols-4 gap-4'>
         {histories?.map((history) => {
+          console.log(history);
+
           return (
-            <div className='aspect-[9/16]' key={history.id}>
-              <img className='w-full h-full object-cover object-center' src={history.image} alt="" />
-            </div>
+            <Link to={`/history/single/${history.id}`} className='aspect-[9/16]' key={history.id}>
+              {history.type === 'image' ?
+                <img className='w-full h-full object-cover object-center' src={history.image} alt="" /> :
+                <video className='w-full h-full object-cover object-center' src={history.video} controls />
+              }
+            </Link>
           )
         })}
       </div>

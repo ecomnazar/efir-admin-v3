@@ -67,7 +67,7 @@ export const AddPostPage = () => {
   }
 
   return (
-    <div className="flex justify-between items-start">
+    <div className="flex justify-between items-start flex-wrap">
       <PrimaryLayout className="">
         <div className="flex items-center justify-between">
           <h2 className="text-lg">Add post</h2>
@@ -97,7 +97,7 @@ export const AddPostPage = () => {
           loading={loading}
         />
       </PrimaryLayout>
-      <SecondaryLayout>
+      <SecondaryLayout className="mt-4">
         <div className="flex items-center gap-x-2">
           <Badge title={isVideo ? 'Video' : 'Image'} />
           <Switch
@@ -114,7 +114,7 @@ export const AddPostPage = () => {
             />
           </Switch>
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-4 gap-2">
           {images &&
             images.map((image, i) => {
               return (
