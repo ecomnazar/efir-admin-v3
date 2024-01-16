@@ -20,6 +20,8 @@ export const getChannels = createAsyncThunk(
   }
 );
 
+// get one channels
+
 // add channel
 
 export const addChannel = createAsyncThunk(

@@ -7,9 +7,10 @@ import { Hr } from "@/shared/ui/hr";
 import { Input } from "@/shared/ui/input";
 import { PrimaryLayout, SecondaryLayout } from "@/shared/ui/layouts";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/shared/ui/button";
 import { SelectFileButton } from "@/entities/select-file-button";
+import { Badge } from "@/shared/ui/badge";
 
 // features to be implemented: delete and update method
 // MUST HAVE - Onclick one post open as big modal video and
@@ -22,8 +23,9 @@ interface FormProps {
 
 export const SinglePostPage = () => {
   const { id } = useParams();
-  const { register, handleSubmit, reset } = useForm<FormProps>();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
+  const { register, handleSubmit, reset } = useForm<FormProps>();
   const post = useAppSelector((state) => state.postSlice.post.data);
   const loadingPost = useAppSelector((state) => state.postSlice.post.loading);
   const [images, setImages] = React.useState<string[]>([]);
@@ -60,13 +62,16 @@ export const SinglePostPage = () => {
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
+  const navigatToUserProfile = () => {
+    console.log('asd')
+    navigate(`/user/profile/${post?.user.id}`)
+  }
+
+  // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
   React.useEffect(() => {
     dispatch(getPost(id!));
   }, []);
-
-
-  console.log(post);
-
 
   React.useEffect(() => {
     const defaultValue = {
@@ -88,6 +93,12 @@ export const SinglePostPage = () => {
         <div className="flex items-center justify-between">
           <h2 className="text-lg">Post information</h2>
           <p>{dateFormat(post?.created_at, "dd/mm/yyyy")}</p>
+        </div>
+        <div className="flex items-center gap-x-2">
+          <Badge title={post?.user.username} />
+          <button onClick={navigatToUserProfile}>
+            <Badge title={"Profile"} className="cursor-pointer" />
+          </button>
         </div>
         <div className="gap-x-4 grid grid-cols-2">
           <Input

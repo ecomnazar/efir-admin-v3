@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { PUser } from "@/entities/user/api/interfaces";
+import { PUser, PUserPremium } from "@/entities/user/api/interfaces";
 import toast from "react-hot-toast";
 import { instance } from "@/shared/api/instance";
 import { API_ENDPOINTS } from "@/shared/api/endpoints";
@@ -84,6 +84,40 @@ export const deleteUser = createAsyncThunk(
       return id;
     } catch (error) {
       toast.error("Пользователь не удален");
+      return Promise.reject(error);
+    }
+  }
+);
+
+export const makeUserPremium = createAsyncThunk(
+  "/user/makePremium",
+  async (data: PUserPremium) => {
+    try {
+      const response = await instance.post(
+        `${API_ENDPOINTS.PREMIUM_USER}`,
+        data
+      );
+      toast.success("Making user premium success");
+      return response.data;
+    } catch (error) {
+      toast.error("Making user premium failed");
+      return Promise.reject(error);
+    }
+  }
+);
+
+export const destroyUserPremium = createAsyncThunk(
+  "/user/destroyPremium",
+  async (id: string) => {
+    try {
+      const response = await instance.post(
+        `${API_ENDPOINTS.DESTROY_PREMIUM_USER}`,
+        { id }
+      );
+      toast.success("Destroying user premium success");
+      return response.data;
+    } catch (error) {
+      toast.error("Destroying user premium failed");
       return Promise.reject(error);
     }
   }
