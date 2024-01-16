@@ -22,6 +22,20 @@ export const getChannels = createAsyncThunk(
 
 // get one channels
 
+export const getChannel = createAsyncThunk(
+  "channel/getChannel",
+  async (id: string) => {
+    try {
+      const response = await instanceSecond.get(
+        `${API_ENDPOINTS.CHANNEL}?id=${id}`
+      );
+      return response.data;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+);
+
 // add channel
 
 export const addChannel = createAsyncThunk(
@@ -75,6 +89,7 @@ export const deleteChannel = createAsyncThunk(
         data: { id },
       });
       toast.success("Канал успешнло удален");
+      return id;
     } catch (error) {
       toast.error("Канал не удален");
       return Promise.reject(error);

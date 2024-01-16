@@ -1,5 +1,10 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { addChannel, getChannels } from "@/entities/channel/api/channelApi";
+import {
+  addChannel,
+  deleteChannel,
+  getChannel,
+  getChannels,
+} from "@/entities/channel/api/channelApi";
 import { GChannel } from "@/entities/channel/model/interfaces";
 
 export const channelSlice = createSlice({
@@ -12,7 +17,13 @@ export const channelSlice = createSlice({
       next: true,
       nextPage: 1,
     },
+    channel: {
+      data: {} as GChannel,
+      loading: false,
+      error: false,
+    },
     addChannelLoading: false, // to show loading in add channel button
+    deleteChannelLoading: false, // to show loading in delete channel button
   },
   reducers: {},
   extraReducers(builder) {
@@ -46,6 +57,24 @@ export const channelSlice = createSlice({
         state.channels.error = true;
       })
 
+      // get channel
+
+      .addCase(getChannel.pending, (state) => {
+        state.channel.loading = true;
+      })
+
+      .addCase(
+        getChannel.fulfilled,
+        (state, action: PayloadAction<GChannel>) => {
+          state.channel.loading = false;
+          state.channel.data = action.payload;
+        }
+      )
+
+      .addCase(getChannel.rejected, (state) => {
+        state.channel.loading = false;
+      })
+
       // add channel
 
       .addCase(addChannel.pending, (state) => {
@@ -62,6 +91,25 @@ export const channelSlice = createSlice({
 
       .addCase(addChannel.rejected, (state) => {
         state.addChannelLoading = false;
+      })
+
+      // delete channel
+
+      .addCase(deleteChannel.pending, (state) => {
+        state.deleteChannelLoading = true;
+      })
+
+      .addCase(
+        deleteChannel.fulfilled,
+        (state, action: PayloadAction<string | number>) => {
+          state.channels.data = state.channels.data.filter(
+            (item) => item.id != action.payload
+          );
+        }
+      )
+
+      .addCase(deleteChannel.rejected, (state) => {
+        state.deleteChannelLoading = false;
       });
   },
 });

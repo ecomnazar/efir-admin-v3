@@ -37,7 +37,7 @@ export const UserProfilePage = () => {
   }, []);
 
   return (
-    loading ? <div className="text-3xl">Loading...</div> : <div className="flex items-start justify-between">
+    loading ? <div className="text-3xl">Loading...</div> : <div className="flex items-start justify-between flex-wrap">
       <SecondaryLayout>
         {user?.avatar ? (
           <img
