@@ -2,7 +2,7 @@ import React from "react";
 import { getUserPosts } from "@/entities/post/api/postApi";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { PrimaryLayout } from "@/shared/ui/layouts";
 import { PostCard } from "@/entities/post";
 import { Button } from "@/shared/ui/button";

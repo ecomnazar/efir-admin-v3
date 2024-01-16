@@ -1,6 +1,7 @@
 import { adminSlice } from "@/entities/admin/model/slice";
 import { categorySlice } from "@/entities/category/model/slice";
 import { channelSlice } from "@/entities/channel/model/slice";
+import { historySlice } from "@/entities/history/model/slice";
 import { postSlice } from "@/entities/post/model/slice";
 import { userSlice } from "@/entities/user/model/slice";
 import { loginSlice } from "@/features/login/model/slice";
@@ -13,4 +14,5 @@ export const rootReducer = combineReducers({
   postSlice: postSlice.reducer,
   channelSlice: channelSlice.reducer,
   adminSlice: adminSlice.reducer,
+  historySlice: historySlice.reducer,
 });

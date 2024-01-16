@@ -1,4 +1,3 @@
-import { categorySlice } from '@/entities/category'
 import { getChannels } from '@/entities/channel/api/channelApi'
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch'
 import { useAppSelector } from '@/shared/lib/hooks/useAppSelector'

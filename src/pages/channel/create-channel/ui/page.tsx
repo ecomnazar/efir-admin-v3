@@ -66,7 +66,7 @@ export const CreateChannelPage = () => {
     }
 
     return (
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between flex-wrap">
             <PrimaryLayout>
                 <h2 className="text-lg">Add channel</h2>
                 <div className="gap-x-4 grid grid-cols-2">
@@ -87,8 +87,8 @@ export const CreateChannelPage = () => {
                     title={"Submit"}
                 />
             </PrimaryLayout>
-            <SecondaryLayout>
-                <div className="grid grid-cols-2 gap-2">
+            <SecondaryLayout className='mt-4'>
+                <div className="grid grid-cols-4 gap-2">
                     {image && (
                         <div className="rounded-md bg-background p-2">
                             <img

@@ -88,14 +88,14 @@ export const SinglePostPage = () => {
   return loadingPost ? (
     <div className="text-3xl">Loading...</div>
   ) : (
-    <div className="flex justify-between items-start">
+    <div className="flex justify-between items-start flex-wrap">
       <PrimaryLayout className="">
         <div className="flex items-center justify-between">
           <h2 className="text-lg">Post information</h2>
           <p>{dateFormat(post?.created_at, "dd/mm/yyyy")}</p>
         </div>
         <div className="flex items-center gap-x-2">
-          <Badge title={post?.user.username} />
+          <Badge title={post?.user?.username} />
           <button onClick={navigatToUserProfile}>
             <Badge title={"Profile"} className="cursor-pointer" />
           </button>
@@ -124,8 +124,8 @@ export const SinglePostPage = () => {
           title={"SUBMIT"}
         />
       </PrimaryLayout>
-      <SecondaryLayout>
-        <div className="grid grid-cols-2 gap-2">
+      <SecondaryLayout className="mt-4">
+        <div className="grid grid-cols-4 gap-2">
           {images &&
             images.map((image) => {
               return (
