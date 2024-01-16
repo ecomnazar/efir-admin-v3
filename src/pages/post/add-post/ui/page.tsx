@@ -1,4 +1,3 @@
-import dateFormat from "dateformat";
 import { SelectFileButton } from "@/entities/select-file-button";
 import { Button } from "@/shared/ui/button";
 import { Hr } from "@/shared/ui/hr";
@@ -11,7 +10,6 @@ import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { addPost } from "@/entities/post/api/postApi";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { Switch } from "@headlessui/react";
-import clsx from "clsx";
 import { Badge } from "@/shared/ui/badge";
 
 interface FormProps {

@@ -37,10 +37,10 @@ export const getPost = createAsyncThunk("post/getPost", async (id: string) => {
 
 export const getUserPosts = createAsyncThunk(
   "post/getUserPosts",
-  async (id: string) => {
+  async ({ id, page }: { id: string; page: number }) => {
     try {
       const response = await instanceSecond.get(
-        `${API_ENDPOINTS.POSTS}?user=${id}`
+        `${API_ENDPOINTS.POSTS}?user=${id}&page=${page}&amount=3`
       );
       return response.data;
     } catch (error) {

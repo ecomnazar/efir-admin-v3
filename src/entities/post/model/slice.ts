@@ -88,8 +88,22 @@ export const postSlice = createSlice({
       })
       .addCase(
         getUserPosts.fulfilled,
-        (state, action: PayloadAction<{ next: string; results: GPost[] }>) => {
-          state.userPosts.data = action.payload.results;
+        (
+          state,
+          action: PayloadAction<{
+            next: string;
+            previous: string;
+            results: GPost[];
+          }>
+        ) => {
+          if (action.payload.previous === null) {
+            state.userPosts.data = action.payload.results;
+          } else {
+            state.userPosts.data = [
+              ...state.userPosts.data,
+              ...action.payload.results,
+            ];
+          }
           state.userPosts.next = action.payload.next ? true : false;
           state.userPosts.loading = false;
         }
