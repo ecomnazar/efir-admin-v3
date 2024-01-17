@@ -1,6 +1,6 @@
 import React from "react";
 import dateFormat from "dateformat";
-import { getPost, updatePost } from "@/entities/post/api/postApi";
+import { deletePost, getPost, updatePost } from "@/entities/post/api/postApi";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { Hr } from "@/shared/ui/hr";
@@ -11,6 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/shared/ui/button";
 import { SelectFileButton } from "@/entities/select-file-button";
 import { Badge } from "@/shared/ui/badge";
+import { deleteUser } from "@/entities/user/api/userApi";
 
 // features to be implemented: delete and update method
 // MUST HAVE - Onclick one post open as big modal video and
@@ -28,6 +29,8 @@ export const SinglePostPage = () => {
   const { register, handleSubmit, reset } = useForm<FormProps>();
   const post = useAppSelector((state) => state.postSlice.post.data);
   const loadingPost = useAppSelector((state) => state.postSlice.post.loading);
+  const loadingUpdateButton = useAppSelector((state) => state.postSlice.updatePostLoading)
+  const loadingDeleteButton = useAppSelector((state) => state.postSlice.deletePostLoading)
   const [images, setImages] = React.useState<string[]>([]);
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
@@ -47,7 +50,7 @@ export const SinglePostPage = () => {
     setImages(filteredImages);
   };
 
-  const onSubmit: SubmitHandler<FormProps> = ({ description, tags }) => {
+  const onSubmit: SubmitHandler<FormProps> = async ({ description, tags }) => {
     const fd = new FormData();
     fd.append("id", post.id)
     fd.append("user", post.user.id);
@@ -57,13 +60,16 @@ export const SinglePostPage = () => {
     for (let index = 0; index < images.length; index++) {
       fd.append(`image_${index + 1}`, images[index]);
     }
-    dispatch(updatePost(fd))
+    await dispatch(updatePost(fd))
   };
 
+  const onDelete = async () => {
+    await dispatch(deletePost(post.id))
+    navigate(`/user/profile/${post?.user.id}`)
+  }
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
   const navigatToUserProfile = () => {
-    console.log('asd')
     navigate(`/user/profile/${post?.user.id}`)
   }
 
@@ -118,11 +124,20 @@ export const SinglePostPage = () => {
             placeholder="Tags"
           />
         </div>
-        <Button
-          onClick={handleSubmit(onSubmit)}
-          className="mt-2"
-          title={"SUBMIT"}
-        />
+        <div className="flex items-center gap-x-2">
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            loading={loadingUpdateButton}
+            className="mt-2"
+            title={"Submit"}
+          />
+          <Button
+            onClick={onDelete}
+            loading={loadingDeleteButton}
+            className="mt-2"
+            title={"Delete"}
+          />
+        </div>
       </PrimaryLayout>
       <SecondaryLayout className="mt-4">
         <div className="grid grid-cols-4 gap-2">

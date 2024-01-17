@@ -79,12 +79,17 @@ export const updatePost = createAsyncThunk(
   "post/updatePost",
   async (data: PPost | any) => {
     try {
-      await instanceSecond.patch(`${API_ENDPOINTS.POSTS}`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await instanceSecond.patch(
+        `${API_ENDPOINTS.POSTS}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       toast.success("Пост успешнло обновлен");
+      return response.data;
     } catch (error) {
       toast.error("Пост не обновлен");
       return Promise.reject(error);
@@ -102,6 +107,7 @@ export const deletePost = createAsyncThunk(
         data: { id },
       });
       toast.success("Пост успешнло удален");
+      return id;
     } catch (error) {
       toast.error("Пост не удален");
       return Promise.reject(error);

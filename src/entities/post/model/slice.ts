@@ -5,6 +5,8 @@ import {
   getPost,
   getUserPosts,
   addPost,
+  updatePost,
+  deletePost,
 } from "@/entities/post/api/postApi";
 
 export const postSlice = createSlice({
@@ -30,6 +32,8 @@ export const postSlice = createSlice({
       next: true,
     },
     addPostLoading: false, // to show loading in add post button
+    updatePostLoading: false, // to show loading in update post button
+    deletePostLoading: false, // to show loading in delete post button
   },
   reducers: {
     setPostsNextPage(state) {
@@ -125,6 +129,37 @@ export const postSlice = createSlice({
 
       .addCase(addPost.rejected, (state) => {
         state.addPostLoading = false;
+      })
+
+      // update post
+
+      .addCase(updatePost.pending, (state) => {
+        state.updatePostLoading = true;
+      })
+
+      .addCase(updatePost.fulfilled, (state, action: PayloadAction<GPost>) => {
+        state.post.data = action.payload;
+        state.updatePostLoading = false;
+      })
+
+      .addCase(updatePost.rejected, (state) => {
+        state.updatePostLoading = false;
+      })
+
+      // delete post
+
+      .addCase(deletePost.pending, (state) => {
+        state.deletePostLoading = true;
+      })
+
+      .addCase(deletePost.fulfilled, (state, action: PayloadAction<string>) => {
+        // state.post.data = action.payload;
+        state.userPosts.data.filter((elem) => elem.id != action.payload);
+        state.deletePostLoading = false;
+      })
+
+      .addCase(deletePost.rejected, (state) => {
+        state.deletePostLoading = false;
       });
   },
 });
