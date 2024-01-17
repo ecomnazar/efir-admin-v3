@@ -1,4 +1,5 @@
 import { deleteChannel, getChannel } from '@/entities/channel/api/channelApi'
+import { HistoryCard } from '@/entities/history'
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch'
 import { useAppSelector } from '@/shared/lib/hooks/useAppSelector'
 import { Button } from '@/shared/ui/button'
@@ -7,7 +8,7 @@ import { Input } from '@/shared/ui/input'
 import { PrimaryLayout, SecondaryLayout } from '@/shared/ui/layouts'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 interface FormProps {
     name: string;
@@ -69,9 +70,7 @@ export const SingleChannelPage = () => {
             <PrimaryLayout className="grid grid-cols-3 gap-4 mt-4">
                 {channel?.stories?.map((story) => {
                     return (
-                        <div key={story.id} className='aspect-[9/16] bg-primary'>
-                            {story.type === 'video' ? <video className='w-full h-full object-cover object-center' src={story.video} controls /> : <img className='w-full h-full object-cover object-center' src={story.image} alt="" />}
-                        </div>
+                        <HistoryCard key={story.id} history={story} />
                     )
                 })}
                 {/*       

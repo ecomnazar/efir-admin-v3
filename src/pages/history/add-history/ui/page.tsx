@@ -60,8 +60,8 @@ export const AddHistoryPage = () => {
                 <div className="gap-x-4 grid grid-cols-2">
                     <Input
                         register={register}
-                        registerName="description"
-                        labelText="Description"
+                        registerName="link"
+                        labelText="Link"
                         variant="secondary"
                         placeholder="Link"
                     />

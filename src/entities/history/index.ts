@@ -1,3 +1,2 @@
-export * as default from "@/entities/history/model/slice"
-export * from "@/entities/history/ui/HistoryImageUpload"
-export * from "@/entities/history/ui/HistoryVideoUpload"
+export * as default from "@/entities/history/model/slice";
+export * from "./ui/history-card";

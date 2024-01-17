@@ -20,21 +20,29 @@ export const SingleHistoryPage = () => {
     const { id } = useParams()
     const dispatch = useAppDispatch()
     const { register, handleSubmit, reset } = useForm<FormProps>()
-    const [isVideo, setIsVideo] = React.useState()
-    const [images, setImages] = React.useState<File[]>([]);
+    const [isVideo, setIsVideo] = React.useState(false)
     const loadingHistory = useAppSelector((state) => state.historySlice.history.loading)
-
     const history = useAppSelector((state) => state.historySlice.history.data)
+    const [previewContent, setPreviewContent] = React.useState<any[]>([])
+    const [uploadContent, setUploadContent] = React.useState<any[]>([])
 
-    const onSubmit = () => {
+    const onSubmit = () => { }
 
-    }
+    const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event?.target?.files) {
+            const uploadFiles = [];
+            const previewFiles = [];
+            console.log(event.target.files);
 
-    const onChangeContentType = () => {
-
-    }
-
-    const onFileChange = () => { }
+            for (let index = 0; index < event.target.files.length; index++) {
+                const file = event.target.files[index]
+                uploadFiles.push(file);
+                previewFiles.push(URL.createObjectURL(file))
+            }
+            setUploadContent(uploadFiles)
+            setPreviewContent(previewFiles)
+        }
+    };
 
     React.useEffect(() => {
         dispatch(getHistory(id!))
@@ -42,10 +50,16 @@ export const SingleHistoryPage = () => {
 
     React.useEffect(() => {
         const defaultValue: FormProps = {
-            link: history?.link
+            link: history?.link || ''
         }
-        //@ts-ignore
-        setImages([history.image])
+        if (history?.type === 'video') {
+            setPreviewContent([history?.video])
+            setUploadContent([history?.video])
+            setIsVideo(true)
+        } else {
+            setPreviewContent([history?.image])
+            setUploadContent([history?.image])
+        }
         reset(defaultValue)
     }, [history])
 
@@ -74,7 +88,7 @@ export const SingleHistoryPage = () => {
                 <SecondaryLayout className="mt-4">
                     <div className="flex items-center gap-x-2">
                         <Badge title={isVideo ? 'Video' : 'Image'} />
-                        <Switch
+                        {/* <Switch
                             checked={isVideo}
                             onChange={onChangeContentType}
                             className={`${isVideo ? 'bg-primary' : 'bg-primary/30'}
@@ -86,31 +100,20 @@ export const SingleHistoryPage = () => {
                                 className={`${isVideo ? 'translate-x-5' : 'translate-x-0'}
       pointer-events-none inline-block h-[24px] w-[24px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
                             />
-                        </Switch>
+                        </Switch> */}
                     </div>
                     <div className="grid grid-cols-4 gap-2">
-                        {images &&
-                            images.map((image, i) => {
-                                return (
-                                    <div key={i} className="rounded-md bg-background p-2">
-                                        {isVideo ? <video
-                                            controls
-                                            className="rounded-md aspect-square object-cover object-center"
-                                            src={URL.createObjectURL(image)}
-                                        /> : <img
-                                            className="rounded-md aspect-square object-cover object-center"
-                                            src={image}
-                                        />}
-                                        <Hr className="!my-2" />
-                                        <button
-                                            // onClick={() => onDeleteImage(i)}
-                                            className="text-[13px] text-center mx-auto block"
-                                        >
-                                            Delete file
-                                        </button>
-                                    </div>
-                                );
-                            })}
+
+                        {previewContent &&
+                            previewContent.map((elem, i) => {
+                                const classNames = "rounded-md aspect-[9/16] object-cover object-center"
+                                return <React.Fragment key={i}>
+                                    {history.type === 'video' ?
+                                        <video className={classNames} src={elem} controls /> :
+                                        <img className={classNames} src={elem} />}
+                                </React.Fragment>
+                            })
+                        }
                     </div>
                     <SelectFileButton onFileChange={onFileChange} contentType={isVideo ? 'video' : 'image'} />
                 </SecondaryLayout></div>
