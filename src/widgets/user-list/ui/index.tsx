@@ -6,14 +6,16 @@ import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { TbTrash } from "react-icons/tb";
 import { FiEdit } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { setActiveUser, setUsersNextPage } from "@/entities/user/model/slice";
+import { setActiveUser } from "@/entities/user/model/slice";
 import { DeleteUserModal } from "@/entities/user";
 import { GUser } from "@/entities/user/model/interfaces";
 import { Badge } from "@/shared/ui/badge";
 
+interface Props {
+  query?: string;
+}
 
-
-export const UserList = () => {
+export const UserList = ({ query }: Props) => {
   const dispatch = useAppDispatch();
   const users = useAppSelector((state) => state.userSlice.users.data);
   const hasNext = useAppSelector((state) => state.userSlice.users.next);
@@ -22,28 +24,23 @@ export const UserList = () => {
   const nextPage = useAppSelector((state) => state.userSlice.users.nextPage);
   const [isOpenDeleteUserModal, setIsOpenDeleteUserModal] = React.useState(false);
 
-  React.useEffect(() => {
-    if (!hasPrev) {
-      dispatch(getUsers(1));
-    }
-  }, []);
-
-  const loadMore = () => {
-    dispatch(getUsers(nextPage));
-    dispatch(setUsersNextPage());
-  };
+  const loadMore = () => dispatch(getUsers({ page: nextPage, query }));
 
   const openDeleteUser = (user: GUser) => {
     dispatch(setActiveUser(user));
     setIsOpenDeleteUserModal(true);
   };
 
+  React.useEffect(() => {
+    if (!hasPrev) {
+      loadMore()
+    }
+  }, []);
+
   return (
     <>
       <div className="w-full bg-secondary rounded-md pb-4">
-        <div className="p-4 flex items-center justify-between">
 
-        </div>
         <ul>
           <li className="flex border-primary border-t border-b px-8 py-2 border-opacity-20 flex-wrap justify-between items-center">
             <div className="basis-[20%] text-[16px]">User</div>

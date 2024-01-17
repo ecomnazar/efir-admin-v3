@@ -1,15 +1,20 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { PUser, PUserPremium, UUser } from "@/entities/user/api/interfaces";
+import {
+  GSearchUser,
+  PUser,
+  PUserPremium,
+  UUser,
+} from "@/entities/user/api/interfaces";
 import toast from "react-hot-toast";
 import { instance } from "@/shared/api/instance";
 import { API_ENDPOINTS } from "@/shared/api/endpoints";
 
 export const getUsers = createAsyncThunk(
   "user/getUsers",
-  async (page: number) => {
+  async ({ page, query = "" }: GSearchUser) => {
     try {
       const response = await instance.get(
-        `${API_ENDPOINTS.USERS}?page=${page}&amount=10`
+        `${API_ENDPOINTS.USERS}?page=${page}&amount=20&q=${query}`
       );
       return response.data;
     } catch (error) {

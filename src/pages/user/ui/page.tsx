@@ -1,9 +1,9 @@
-import { searchUser } from "@/entities/user/api/userApi";
+import { getUsers } from "@/entities/user/api/userApi";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
-import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input"
 import { UserList } from "@/widgets/user-list"
+import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -16,11 +16,14 @@ interface FormProps {
 export const UserPage = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch();
-  const { register, handleSubmit } = useForm<FormProps>()
-  const searchLoading = useAppSelector((state) => state.userSlice.searchUserLoading)
+  const { register, handleSubmit, watch } = useForm<FormProps>()
+  const [searchLoading, setSearchLoading] = React.useState(false)
+  const queryValue = watch('query')
 
-  const onSearch: SubmitHandler<FormProps> = ({ query }) => {
-    dispatch(searchUser(query))
+  const onSearch: SubmitHandler<FormProps> = async ({ query }) => {
+    setSearchLoading(true)
+    await dispatch(getUsers({ page: 1, query }))
+    setSearchLoading(false)
   }
 
 
@@ -34,11 +37,12 @@ export const UserPage = () => {
         </form>
         <Button
           onClick={() => navigate("/user/create")}
+          loading={searchLoading}
           className="ml-auto block"
           title="Add User"
         />
       </div>
-      <UserList />
+      <UserList query={queryValue} />
     </section>
   )
 }

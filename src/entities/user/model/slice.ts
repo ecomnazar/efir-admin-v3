@@ -21,7 +21,7 @@ export const userSlice = createSlice({
       error: false,
       next: false,
       prev: false,
-      nextPage: 2,
+      nextPage: 1,
     },
     user: {
       data: {} as GUser,
@@ -42,14 +42,10 @@ export const userSlice = createSlice({
     },
     activeUser: {} as GUser, // need one active category to edit category
     deleteUserLoading: false, // to show loading in delete category button
-    searchUserLoading: false, // to show loading in search button
   },
   reducers: {
     setActiveUser(state, action: PayloadAction<GUser>) {
       state.activeUser = action.payload;
-    },
-    setUsersNextPage: (state) => {
-      state.users.nextPage = state.users.nextPage + 1;
     },
   },
   extraReducers(builder) {
@@ -70,14 +66,16 @@ export const userSlice = createSlice({
             results: GUser[];
           }>
         ) => {
-          if (state.users.prev === true) {
-            state.users.data = [...state.users.data, ...action.payload.results];
-          } else {
+          if (action.payload.previous === null) {
             state.users.data = action.payload.results;
             state.users.prev = action.payload.previous === null ? true : false;
+            state.users.nextPage = 1;
+          } else {
+            state.users.data = [...state.users.data, ...action.payload.results];
           }
           state.users.next = action.payload.next ? true : false;
           state.users.loading = false;
+          state.users.nextPage = state.users.nextPage + 1;
         }
       )
       .addCase(getUsers.rejected, (state) => {
@@ -116,33 +114,6 @@ export const userSlice = createSlice({
       .addCase(getUsersAsChannel.rejected, (state) => {
         state.usersAsChannel.loading = false;
         state.usersAsChannel.error = true;
-      })
-
-      // search user
-
-      .addCase(searchUser.pending, (state) => {
-        state.searchUserLoading = true;
-      })
-
-      .addCase(
-        searchUser.fulfilled,
-        (
-          state,
-          action: PayloadAction<{
-            next: string;
-            previous: string;
-            results: GUser[];
-          }>
-        ) => {
-          if (action.payload.previous === null) {
-            state.users.data = action.payload.results;
-          }
-          state.searchUserLoading = false;
-        }
-      )
-
-      .addCase(searchUser.rejected, (state) => {
-        state.searchUserLoading = false;
       })
 
       // add user
@@ -203,4 +174,4 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUsersNextPage, setActiveUser } = userSlice.actions;
+export const { setActiveUser } = userSlice.actions;

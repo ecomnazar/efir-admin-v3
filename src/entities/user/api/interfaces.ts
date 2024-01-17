@@ -18,3 +18,8 @@ export interface UUser {
   id: string;
   post_limit: number;
 }
+
+export interface GSearchUser {
+  page: number;
+  query?: string;
+}

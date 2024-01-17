@@ -11,7 +11,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/shared/ui/button";
 import { SelectFileButton } from "@/entities/select-file-button";
 import { Badge } from "@/shared/ui/badge";
-import { deleteUser } from "@/entities/user/api/userApi";
 
 // features to be implemented: delete and update method
 // MUST HAVE - Onclick one post open as big modal video and
