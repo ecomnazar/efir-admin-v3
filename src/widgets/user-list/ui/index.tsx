@@ -1,31 +1,24 @@
 import React from "react";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
-import { getUsers, searchUser } from "@/entities/user/api/userApi";
+import { getUsers } from "@/entities/user/api/userApi";
 import { Button } from "@/shared/ui/button";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { TbTrash } from "react-icons/tb";
 import { FiEdit } from "react-icons/fi";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { setActiveUser, setUsersNextPage } from "@/entities/user/model/slice";
 import { DeleteUserModal } from "@/entities/user";
 import { GUser } from "@/entities/user/model/interfaces";
 import { Badge } from "@/shared/ui/badge";
-import { Input } from "@/shared/ui/input";
-import { SubmitHandler, useForm } from "react-hook-form";
 
-interface FormProps {
-  query: string;
-}
+
 
 export const UserList = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<FormProps>()
   const users = useAppSelector((state) => state.userSlice.users.data);
   const hasNext = useAppSelector((state) => state.userSlice.users.next);
   const hasPrev = useAppSelector((state) => state.userSlice.users.prev);
   const loading = useAppSelector((state) => state.userSlice.users.loading);
-  const searchLoading = useAppSelector((state) => state.userSlice.searchUserLoading)
   const nextPage = useAppSelector((state) => state.userSlice.users.nextPage);
   const [isOpenDeleteUserModal, setIsOpenDeleteUserModal] = React.useState(false);
 
@@ -45,25 +38,11 @@ export const UserList = () => {
     setIsOpenDeleteUserModal(true);
   };
 
-  const onSearch: SubmitHandler<FormProps> = ({ query }) => {
-    dispatch(searchUser(query))
-  }
-
-
-
   return (
     <>
       <div className="w-full bg-secondary rounded-md pb-4">
         <div className="p-4 flex items-center justify-between">
-          <div className="flex items-center gap-x-2">
-            <Input register={register} registerName="query" placeholder="Search..." className="inline-block -mt-2" variant="secondary" />
-            <Button loading={searchLoading} onClick={handleSubmit(onSearch)} title={"Search"} className="h-[38px]" />
-          </div>
-          <Button
-            onClick={() => navigate("/user/create")}
-            className="ml-auto block"
-            title="Add User"
-          />
+
         </div>
         <ul>
           <li className="flex border-primary border-t border-b px-8 py-2 border-opacity-20 flex-wrap justify-between items-center">
