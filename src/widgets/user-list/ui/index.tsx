@@ -1,11 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { getUsers } from "@/entities/user/api/userApi";
 import { LoadMoreButton } from "@/shared/ui/button";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { TbTrash } from "react-icons/tb";
 import { FiEdit } from "react-icons/fi";
-import { Link } from "react-router-dom";
 import { setActiveUser } from "@/entities/user/model/slice";
 import { DeleteUserModal } from "@/entities/user";
 import { GUser } from "@/entities/user/model/interfaces";

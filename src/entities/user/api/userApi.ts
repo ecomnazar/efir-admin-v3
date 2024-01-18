@@ -14,7 +14,7 @@ export const getUsers = createAsyncThunk(
   async ({ page, query = "" }: GSearchUser) => {
     try {
       const response = await instance.get(
-        `${API_ENDPOINTS.USERS}?page=${page}&amount=2&q=${query}`
+        `${API_ENDPOINTS.USERS}?page=${page}&amount=20&q=${query}`
       );
       return response.data;
     } catch (error) {

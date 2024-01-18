@@ -18,7 +18,7 @@ export const postSlice = createSlice({
       error: false,
       prev: false,
       next: true,
-      nextPage: 2,
+      nextPage: 1,
     },
     post: {
       data: {} as GPost,
@@ -35,11 +35,7 @@ export const postSlice = createSlice({
     updatePostLoading: false, // to show loading in update post button
     deletePostLoading: false, // to show loading in delete post button
   },
-  reducers: {
-    setPostsNextPage(state) {
-      state.posts.nextPage = state.posts.nextPage + 1;
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
 
@@ -66,6 +62,7 @@ export const postSlice = createSlice({
           }
           state.posts.loading = false;
           state.posts.next = action.payload.next ? true : false;
+          state.posts.nextPage = state.posts.nextPage + 1;
         }
       )
       .addCase(getPosts.rejected, (state) => {
@@ -154,7 +151,12 @@ export const postSlice = createSlice({
 
       .addCase(deletePost.fulfilled, (state, action: PayloadAction<string>) => {
         // state.post.data = action.payload;
-        state.userPosts.data.filter((elem) => elem.id != action.payload);
+        state.userPosts.data = state.userPosts.data.filter(
+          (elem) => elem.id != action.payload
+        );
+        state.posts.data = state.posts.data.filter(
+          (elem) => elem.id != action.payload
+        );
         state.deletePostLoading = false;
       })
 
@@ -163,5 +165,3 @@ export const postSlice = createSlice({
       });
   },
 });
-
-export const { setPostsNextPage } = postSlice.actions;

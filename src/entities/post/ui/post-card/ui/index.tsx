@@ -7,20 +7,20 @@ interface Props {
   className?: string;
 }
 
-export const PostCard = ({ post, className }: Props) => {
+export const PostCard: React.FC<Props> = ({ post, className }) => {
   return (
     <Link
       to={`/post/single/${post.id}`}
       key={post.id}
-      className={clsx("h-auto bg-background rounded-md p-4 flex flex-col", className)}
+      className={clsx("h-auto bg-background rounded-md p-2 md:p-4 flex flex-col", className)}
     >
       <img
-        className="aspect-square flex-1 object-fit object-cover w-full rounded-md"
+        className="aspect-[1/1] flex-1 object-fit object-cover w-full h-full rounded-md"
         src={post.is_video ? post.thumbnail : post.images[0]}
         alt=""
       />
 
-      <div className="mt-2">
+      <div className="mt-2 overflow-hidden">
         <p className="text-[12px] lg:text-[15px] whitespace-nowrap overflow-clip">
           Description: <span className="text-[11px] lg:text-[13px]">{post.description}</span>
         </p>

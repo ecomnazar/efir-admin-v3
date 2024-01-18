@@ -1,6 +1,6 @@
 import React from "react";
 import dateFormat from "dateformat";
-import { deletePost, getPost, updatePost } from "@/entities/post/api/postApi";
+import { getPost, updatePost } from "@/entities/post/api/postApi";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { Hr } from "@/shared/ui/hr";
@@ -11,6 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/shared/ui/button";
 import { SelectFileButton } from "@/entities/select-file-button";
 import { Badge } from "@/shared/ui/badge";
+import { DeletePostButton } from "./delete-post-button";
 
 // features to be implemented: delete and update method
 // MUST HAVE - Onclick one post open as big modal video and
@@ -25,11 +26,11 @@ export const SinglePostPage = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate()
-  const { register, handleSubmit, reset } = useForm<FormProps>();
+
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormProps>();
   const post = useAppSelector((state) => state.postSlice.post.data);
   const loadingPost = useAppSelector((state) => state.postSlice.post.loading);
   const loadingUpdateButton = useAppSelector((state) => state.postSlice.updatePostLoading)
-  const loadingDeleteButton = useAppSelector((state) => state.postSlice.deletePostLoading)
   const [images, setImages] = React.useState<string[]>([]);
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
@@ -62,10 +63,7 @@ export const SinglePostPage = () => {
     await dispatch(updatePost(fd))
   };
 
-  const onDelete = async () => {
-    await dispatch(deletePost(post.id))
-    navigate(`/user/profile/${post?.user.id}`)
-  }
+
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
   const navigatToUserProfile = () => {
@@ -107,8 +105,8 @@ export const SinglePostPage = () => {
         </div>
         <div className="gap-x-4 grid grid-cols-2">
           <Input
-            register={register}
-            registerName="description"
+            register={register('description', { required: true })}
+            error={errors.description?.message}
             labelText="Description"
             variant="secondary"
             placeholder="Description"
@@ -116,27 +114,15 @@ export const SinglePostPage = () => {
         </div>
         <div className=" gap-x-4 grid grid-cols-2">
           <Input
-            register={register}
-            registerName="tags"
+            register={register('tags', { required: true })}
+            error={errors.tags?.message}
             labelText="Tags"
             variant="secondary"
             placeholder="Tags"
           />
         </div>
-        <div className="flex items-center gap-x-2">
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            loading={loadingUpdateButton}
-            className="mt-2"
-            title={"Submit"}
-          />
-          <Button
-            onClick={onDelete}
-            loading={loadingDeleteButton}
-            className="mt-2 !bg-red/30"
-            title={"Delete"}
-          />
-        </div>
+
+
       </PrimaryLayout>
       <SecondaryLayout className="mt-4">
         <div className="grid grid-cols-4 gap-2">
@@ -161,6 +147,15 @@ export const SinglePostPage = () => {
         </div>
         <SelectFileButton onFileChange={onFileChange} />
       </SecondaryLayout>
+      <div className="w-full bg-secondary p-4 mt-4">
+        <Button
+          onClick={handleSubmit(onSubmit)}
+          loading={loadingUpdateButton}
+          className="w-full"
+          title={"Submit"}
+        />
+        <DeletePostButton />
+      </div>
     </div>
   );
 };
