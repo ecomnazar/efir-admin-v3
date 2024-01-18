@@ -133,7 +133,7 @@ export const SinglePostPage = () => {
           <Button
             onClick={onDelete}
             loading={loadingDeleteButton}
-            className="mt-2"
+            className="mt-2 !bg-red/30"
             title={"Delete"}
           />
         </div>

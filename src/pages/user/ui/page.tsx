@@ -37,7 +37,6 @@ export const UserPage = () => {
         </form>
         <Button
           onClick={() => navigate("/user/create")}
-          loading={searchLoading}
           className="ml-auto block"
           title="Add User"
         />

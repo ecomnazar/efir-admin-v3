@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import {
   addHistoryImage,
   addHistoryVideo,
+  deleteHistory,
   getHistories,
   getHistory,
 } from "@/entities/history/api/historyApi";
@@ -22,7 +23,8 @@ export const historySlice = createSlice({
       loading: false,
       error: false,
     },
-    addHistoryLoading: false,
+    addHistoryLoading: false, // to show loading in add history button
+    deleteHistoryLoading: false, // to show loading in delete history button
   },
   reducers: {},
   extraReducers(builder) {
@@ -106,6 +108,28 @@ export const historySlice = createSlice({
 
       .addCase(addHistoryVideo.rejected, (state) => {
         state.addHistoryLoading = false;
+      })
+
+      //
+
+      // delete history
+
+      .addCase(deleteHistory.pending, (state) => {
+        state.deleteHistoryLoading = true;
+      })
+
+      .addCase(
+        deleteHistory.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.histories.data = state.histories.data.filter(
+            (elem) => String(elem.id) != action.payload
+          );
+          state.deleteHistoryLoading = false;
+        }
+      )
+
+      .addCase(deleteHistory.rejected, (state) => {
+        state.deleteHistoryLoading = false;
       });
   },
 });

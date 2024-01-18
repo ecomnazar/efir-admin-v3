@@ -11,6 +11,7 @@ import { addPost } from "@/entities/post/api/postApi";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { Switch } from "@headlessui/react";
 import { Badge } from "@/shared/ui/badge";
+import toast from "react-hot-toast";
 
 interface FormProps {
   description: string;
@@ -52,8 +53,12 @@ export const AddPostPage = () => {
       }
     }
     // fix
-    await dispatch(addPost(fd))
-    navigate(`/user/profile/${id}`)
+    if (images.length !== 0) {
+      await dispatch(addPost(fd))
+      navigate(`/user/profile/${id}`)
+    } else {
+      toast.error('Please select file')
+    }
   };
 
   const onDeleteImage = (i: number) => {
@@ -90,12 +95,6 @@ export const AddPostPage = () => {
             placeholder="Tags"
           />
         </div>
-        <Button
-          onClick={handleSubmit(onSubmit)}
-          className="mt-2"
-          title={"SUBMIT"}
-          loading={loading}
-        />
       </PrimaryLayout>
       <SecondaryLayout className="mt-4">
         <div className="flex items-center gap-x-2">
@@ -140,6 +139,14 @@ export const AddPostPage = () => {
         </div>
         <SelectFileButton onFileChange={onFileChange} contentType={isVideo ? 'video' : 'image'} />
       </SecondaryLayout>
+      <div className="w-full bg-secondary p-4 mt-4">
+        <Button
+          onClick={handleSubmit(onSubmit)}
+          className="w-full"
+          title={"SUBMIT"}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 };

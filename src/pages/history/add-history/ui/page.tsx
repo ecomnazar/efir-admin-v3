@@ -11,6 +11,7 @@ import { Switch } from '@headlessui/react'
 import { SelectFileButton } from '@/entities/select-file-button'
 import { Badge } from '@/shared/ui/badge'
 import { Hr } from '@/shared/ui/hr'
+import toast from 'react-hot-toast'
 
 interface FormProps {
     link: string;
@@ -47,8 +48,12 @@ export const AddHistoryPage = () => {
         fd.append('type', isVideo ? 'video' : 'image')
         fd.append('link', link)
         isVideo ? fd.append('video', images[0]) : fd.append('image', images[0])
-        await dispatch(addHistoryImage(fd))
-        navigate(`/channel/single/${id}`)
+        if (images[0]) {
+            await dispatch(addHistoryImage(fd))
+            navigate(`/channel/single/${id}`)
+        } else {
+            toast.error('Please select file')
+        }
     }
 
     return (

@@ -1,5 +1,5 @@
 import React from "react"
-import { getHistory } from "@/entities/history/api/historyApi"
+import { deleteHistory, getHistory } from "@/entities/history/api/historyApi"
 import { SelectFileButton } from "@/entities/select-file-button"
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch"
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector"
@@ -10,7 +10,7 @@ import { Input } from "@/shared/ui/input"
 import { PrimaryLayout, SecondaryLayout } from "@/shared/ui/layouts"
 import { Switch } from "@headlessui/react"
 import { useForm } from "react-hook-form"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 interface FormProps {
     link: string;
@@ -19,21 +19,24 @@ interface FormProps {
 export const SingleHistoryPage = () => {
     const { id } = useParams()
     const dispatch = useAppDispatch()
-    const { register, handleSubmit, reset } = useForm<FormProps>()
-    const [isVideo, setIsVideo] = React.useState(false)
+    const navigate = useNavigate()
+    const { register, reset } = useForm<FormProps>()
     const loadingHistory = useAppSelector((state) => state.historySlice.history.loading)
+    const deleteHistoryLoading = useAppSelector((state) => state.historySlice.deleteHistoryLoading)
     const history = useAppSelector((state) => state.historySlice.history.data)
     const [previewContent, setPreviewContent] = React.useState<any[]>([])
     const [uploadContent, setUploadContent] = React.useState<any[]>([])
+    const [isVideo, setIsVideo] = React.useState(false)
 
-    const onSubmit = () => { }
+    const onDelete = () => {
+        dispatch(deleteHistory(id!))
+        navigate(-1)
+    }
 
     const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event?.target?.files) {
             const uploadFiles = [];
             const previewFiles = [];
-            console.log(event.target.files);
-
             for (let index = 0; index < event.target.files.length; index++) {
                 const file = event.target.files[index]
                 uploadFiles.push(file);
@@ -50,7 +53,7 @@ export const SingleHistoryPage = () => {
 
     React.useEffect(() => {
         const defaultValue: FormProps = {
-            link: history?.link || ''
+            link: history.link || ''
         }
         if (history?.type === 'video') {
             setPreviewContent([history?.video])
@@ -79,39 +82,25 @@ export const SingleHistoryPage = () => {
                     />
                 </div>
                 <Button
-                    onClick={handleSubmit(onSubmit)}
-                    className="mt-2"
-                    title={"SUBMIT"}
-                // loading={loading}
+                    onClick={onDelete}
+                    className="mt-2 !bg-red/30"
+                    title={"Delete"}
+                    loading={deleteHistoryLoading}
                 />
             </PrimaryLayout>
                 <SecondaryLayout className="mt-4">
                     <div className="flex items-center gap-x-2">
                         <Badge title={isVideo ? 'Video' : 'Image'} />
-                        {/* <Switch
-                            checked={isVideo}
-                            onChange={onChangeContentType}
-                            className={`${isVideo ? 'bg-primary' : 'bg-primary/30'}
-    relative inline-flex h-[28px] w-[48px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}
-                        >
-                            <span className="sr-only">Use setting</span>
-                            <span
-                                aria-hidden="true"
-                                className={`${isVideo ? 'translate-x-5' : 'translate-x-0'}
-      pointer-events-none inline-block h-[24px] w-[24px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
-                            />
-                        </Switch> */}
                     </div>
                     <div className="grid grid-cols-4 gap-2">
-
                         {previewContent &&
                             previewContent.map((elem, i) => {
                                 const classNames = "rounded-md aspect-[9/16] object-cover object-center"
-                                return <React.Fragment key={i}>
+                                return <div key={i} className="rounded-md bg-background p-2">
                                     {history.type === 'video' ?
                                         <video className={classNames} src={elem} controls /> :
                                         <img className={classNames} src={elem} />}
-                                </React.Fragment>
+                                </div>
                             })
                         }
                     </div>

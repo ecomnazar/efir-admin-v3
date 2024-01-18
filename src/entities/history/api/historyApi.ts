@@ -94,6 +94,7 @@ export const deleteHistory = createAsyncThunk(
         data: { id },
       });
       toast.success("История успешнло удалена");
+      return id;
     } catch (error) {
       toast.error("История не удалена");
       return Promise.reject(error);
