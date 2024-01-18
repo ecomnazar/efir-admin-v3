@@ -1,20 +1,17 @@
 import React from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { getUsers } from "@/entities/user/api/userApi";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input"
 import { UserList } from "@/widgets/user-list"
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-
-// add: user profile data update
+import { UserCreateButton } from "./user-create-button";
 
 interface FormProps {
   query: string;
 }
 
 export const UserPage = () => {
-  const navigate = useNavigate()
   const dispatch = useAppDispatch();
   const { register, handleSubmit, watch } = useForm<FormProps>()
   const [searchLoading, setSearchLoading] = React.useState(false)
@@ -26,7 +23,6 @@ export const UserPage = () => {
     setSearchLoading(false)
   }
 
-
   return (
     <section>
       <h2 className="text-xl mb-4">Users list</h2>
@@ -35,11 +31,7 @@ export const UserPage = () => {
           <Input register={register('query')} placeholder="Search..." className="inline-block -mt-2" variant="secondary" />
           <Button loading={searchLoading} onClick={handleSubmit(onSearch)} title={"Search"} className="h-[38px]" />
         </form>
-        <Button
-          onClick={() => navigate("/user/create")}
-          className="ml-auto block"
-          title="Add User"
-        />
+        <UserCreateButton />
       </div>
       <UserList query={queryValue} />
     </section>

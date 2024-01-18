@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch";
 import { getUsers } from "@/entities/user/api/userApi";
-import { Button } from "@/shared/ui/button";
+import { LoadMoreButton } from "@/shared/ui/button";
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { TbTrash } from "react-icons/tb";
 import { FiEdit } from "react-icons/fi";
@@ -94,14 +94,7 @@ export const UserList = ({ query }: Props) => {
             );
           })}
         </ul>
-        {hasNext && (
-          <Button
-            loading={loading}
-            onClick={loadMore}
-            className="mx-auto block mt-4"
-            title={"Load more"}
-          />
-        )}
+        <LoadMoreButton hasNext={hasNext} loading={loading} loadMore={loadMore} />
       </div>
 
       {/* MODALS */}

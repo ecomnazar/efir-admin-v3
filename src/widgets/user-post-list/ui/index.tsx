@@ -17,32 +17,33 @@ const UserPostList = () => {
 
   const loadMore = () => {
     dispatch(getUserPosts({ id: id!, page: nextPage }))
-    setNextPage((prev) => prev + 1)
+    setNextPage(nextPage + 1)
   }
 
   React.useEffect(() => {
     if (nextPage === 1) {
-      dispatch(getUserPosts({ id: id!, page: 1 }));
-      setNextPage((prev) => prev + 1)
+      loadMore()
     }
   }, []);
 
   return (
-    <PrimaryLayout className="grid grid-cols-3 gap-4 mt-4">
-      {posts?.map((post) => {
-        return (
-          <PostCard key={post.id} post={post} />
-        );
-      })}
+    <>
+      <PrimaryLayout className="grid grid-cols-3 gap-4 mt-4">
+        {posts?.map((post) => {
+          return (
+            <PostCard key={post.id} post={post} />
+          );
+        })}
+      </PrimaryLayout>
       {hasNext && (
         <Button
           loading={loading}
           onClick={loadMore}
-          className="mx-auto block mt-4"
+          className="mx-auto block my-4"
           title={"Load more"}
         />
       )}
-    </PrimaryLayout>
+    </>
   );
 };
 
