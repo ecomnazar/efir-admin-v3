@@ -80,8 +80,6 @@ export const addUser = createAsyncThunk(
 export const updateUser = createAsyncThunk(
   "user/updateUser",
   async (data: UUser) => {
-    console.log(data.id);
-
     try {
       const response = await instance.patch(`${API_ENDPOINTS.USERS}`, data);
       toast.success("Пользователь успешно обновлен");

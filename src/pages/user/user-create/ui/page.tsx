@@ -8,6 +8,7 @@ import { PrimaryLayout, SecondaryLayout } from "@/shared/ui/layouts";
 import { Select } from "@/shared/ui/select";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 // just add validation, city and region
@@ -30,7 +31,7 @@ const people = [
 export const UserCreate = () => {
   const dispatch = useAppDispatch();
   const [selected, setSelected] = React.useState(people[0]);
-  const { register, handleSubmit } = useForm<FormProps>();
+  const { register, handleSubmit, formState: { errors } } = useForm<FormProps>();
   const [image, setImage] = React.useState<File>();
   const navigate = useNavigate()
   const loading = useAppSelector((state) => state.userSlice.addUser.loading);
@@ -50,8 +51,12 @@ export const UserCreate = () => {
     fd.append("city", "1");
     fd.append("is_channel", "True");
     fd.append("avatar", image!);
-    await dispatch(addUser(fd));
-    navigate('/user/list')
+    if (image) {
+      await dispatch(addUser(fd));
+      navigate('/user/list')
+    } else {
+      toast.error('Please select an image')
+    }
   };
 
   return (
@@ -60,45 +65,38 @@ export const UserCreate = () => {
         <h2 className="text-lg">Add user</h2>
         <div className="gap-x-4 grid grid-cols-2">
           <Input
-            register={register}
-            registerName="username"
+            register={register("username", { required: 'Required field' })}
             labelText="Username"
             variant="secondary"
+            error={errors.username?.message}
           />
-
         </div>
         <div className="gap-x-4 grid grid-cols-2">
           <Input
-            register={register}
-            registerName="bio"
+            register={register('bio', { required: 'Required field' })}
             labelText="Bio"
             variant="secondary"
+            error={errors.bio?.message}
           />
         </div>
         <div className="gap-x-4 grid grid-cols-2">
           <Input
-            register={register}
-            registerName="address"
+            register={register('address', { required: 'Required field' })}
             labelText="Address"
             variant="secondary"
+            error={errors.address?.message}
           />
         </div>
         {/* <div className="gap-x-4 grid grid-cols-2 mt-2">
           <Select selected={selected} setSelected={setSelected} data={people} />
         </div> */}
-        <Button
-          loading={loading}
-          onClick={handleSubmit(onSubmit)}
-          className="mt-2"
-          title={"Submit"}
-        />
       </PrimaryLayout>
       <SecondaryLayout className="mt-2">
         <div className="grid grid-cols-2 gap-2">
           {image && (
             <div className="rounded-md bg-background p-2">
               <img
-                className="rounded-md aspect-square object-cover object-center"
+                className="w-full h-full rounded-md aspect-[1/1] object-cover object-center"
                 src={URL.createObjectURL(image)}
               />
             </div>
@@ -106,6 +104,14 @@ export const UserCreate = () => {
         </div>
         <SelectFileButton onFileChange={onFileChange} />
       </SecondaryLayout>
+      <div className="bg-secondary rounded-md p-4 w-full mt-2">
+        <Button
+          loading={loading}
+          onClick={handleSubmit(onSubmit)}
+          className="w-full"
+          title={"Submit"}
+        />
+      </div>
     </div>
   );
 };

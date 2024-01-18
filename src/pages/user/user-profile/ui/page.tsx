@@ -11,6 +11,8 @@ import { Hr } from "@/shared/ui/hr";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { PostLimitForm } from "./post-limit-form";
+import { PremiumPeriodForm } from "./premium-period-form";
 
 interface FormProps {
   period: number
@@ -31,10 +33,6 @@ export const UserProfilePage = () => {
 
   const onDestroyPremium = () => {
     dispatch(destroyUserPremium(id!))
-  }
-
-  const onUpdateLimit: SubmitHandler<FormProps> = ({ post_limit }) => {
-    dispatch(updateUser({ id: id!, post_limit }))
   }
 
   React.useEffect(() => {
@@ -115,14 +113,8 @@ export const UserProfilePage = () => {
             }
           </ul>
           <div className="flex flex-col gap-y-2">
-            <div className="flex items-center gap-x-2">
-              <Input register={register} registerName="post_limit" placeholder="Post limit" variant="secondary" />
-              <Button onClick={handleSubmit(onUpdateLimit)} title={"Add"} className="!h-[37px]" />
-            </div>
-            <div className="flex items-center gap-x-2">
-              <Input register={register} registerName="period" placeholder="Premium period" variant="secondary" />
-              <Button onClick={handleSubmit(onSubmitPremium)} title={"Add"} className="!h-[37px]" />
-            </div>
+            <PostLimitForm />
+            <PremiumPeriodForm />
           </div>
           {user.is_premium && <Button onClick={handleSubmit(onDestroyPremium)} title={"Destroy premium"} className="!h-[37px] mt-2 bg-red/35 w-full" />}
           <Button onClick={() => navigate(`/post/create/${user?.id}`)} className="mt-2 w-full" title={"Add post"} />
