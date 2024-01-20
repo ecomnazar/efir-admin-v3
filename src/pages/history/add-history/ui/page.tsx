@@ -1,17 +1,17 @@
 import React from 'react'
+import toast from 'react-hot-toast'
+import { Switch } from '@headlessui/react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { addHistoryImage } from '@/entities/history/api/historyApi'
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch'
 import { useNavigate, useParams } from 'react-router-dom'
 import { PrimaryLayout, SecondaryLayout } from '@/shared/ui/layouts'
 import { Input } from '@/shared/ui/input'
-import { SubmitHandler, useForm } from 'react-hook-form'
 import { Button } from '@/shared/ui/button'
 import { useAppSelector } from '@/shared/lib/hooks/useAppSelector'
-import { Switch } from '@headlessui/react'
 import { SelectFileButton } from '@/entities/select-file-button'
 import { Badge } from '@/shared/ui/badge'
 import { Hr } from '@/shared/ui/hr'
-import toast from 'react-hot-toast'
 
 interface FormProps {
     link: string;
@@ -25,7 +25,6 @@ export const AddHistoryPage = () => {
     const loading = useAppSelector((state) => state.historySlice.addHistoryLoading)
     const [isVideo, setIsVideo] = React.useState(false)
     const [images, setImages] = React.useState<File[]>([]);
-
 
     const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event?.target?.files) {
@@ -64,8 +63,7 @@ export const AddHistoryPage = () => {
                 </div>
                 <div className="gap-x-4 grid grid-cols-2">
                     <Input
-                        register={register}
-                        registerName="link"
+                        register={register('link')}
                         labelText="Link"
                         variant="secondary"
                         placeholder="Link"

@@ -4,9 +4,10 @@ import React from "react";
 interface Props {
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   contentType?: 'image' | 'video'
+  isMultiple?: boolean;
 }
 
-export const SelectFileButton = ({ onFileChange, contentType = 'image' }: Props) => {
+export const SelectFileButton = ({ onFileChange, contentType = 'image', isMultiple = true }: Props) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
   return (
     <>
@@ -21,7 +22,7 @@ export const SelectFileButton = ({ onFileChange, contentType = 'image' }: Props)
         ref={inputRef}
         type="file"
         accept={`${contentType}/*`}
-        multiple
+        multiple={isMultiple}
       />
     </>
   );

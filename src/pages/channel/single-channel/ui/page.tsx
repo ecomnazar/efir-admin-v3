@@ -60,7 +60,7 @@ export const SingleChannelPage = () => {
                 <div>
                     <h3 className="text-primary/70 text-[14px]">DETAILS</h3>
                     <div className="flex items-center gap-x-2">
-                        <Input register={register} registerName="name" placeholder="Channel name" variant="secondary" />
+                        <Input register={register('name')} placeholder="Channel name" variant="secondary" />
                     </div>
                     <Button onClick={onEditChannel} className="mt-2 w-full bg-primary/30" title={"Save profile changes"} />
                     <Button onClick={ondeleteChannel} className="mt-2 w-full bg-red/30" title={"Delete channel"} />
