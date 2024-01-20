@@ -5,7 +5,7 @@ import { useAppSelector } from "@/shared/lib/hooks/useAppSelector";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { PrimaryLayout, SecondaryLayout } from "@/shared/ui/layouts";
-import { Select } from "@/shared/ui/select";
+// import { Select } from "@/shared/ui/select";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -30,7 +30,7 @@ const people = [
 
 export const UserCreate = () => {
   const dispatch = useAppDispatch();
-  const [selected, setSelected] = React.useState(people[0]);
+  // const [selected, setSelected] = React.useState(people[0]);
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>();
   const [image, setImage] = React.useState<File>();
   const navigate = useNavigate()

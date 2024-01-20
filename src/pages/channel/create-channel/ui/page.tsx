@@ -1,15 +1,16 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { addChannel } from '@/entities/channel/api/channelApi'
 import { SelectFileButton } from '@/entities/select-file-button'
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch'
 import { useAppSelector } from '@/shared/lib/hooks/useAppSelector'
-import { Button } from '@/shared/ui/button'
-import { Input } from '@/shared/ui/input'
 import { PrimaryLayout, SecondaryLayout } from '@/shared/ui/layouts'
-import { Select } from '@/shared/ui/select'
-import { SubmitHandler, useForm } from 'react-hook-form'
 import { getCategories } from '@/entities/category/api/categoryApi'
-import { useNavigate } from 'react-router-dom'
+import { Select } from '@/shared/ui/select'
+import { Input } from '@/shared/ui/input'
+import { Button } from '@/shared/ui/button'
+import toast from 'react-hot-toast'
 
 interface SelectDTOProps {
     name: string;
@@ -50,8 +51,12 @@ export const CreateChannelPage = () => {
         fd.append("name", channelName);
         fd.append("category", selected.id);
         fd.append("avatar", image!);
-        await dispatch(addChannel(fd));
-        navigate('/channel/list')
+        if (image) {
+            await dispatch(addChannel(fd));
+            navigate('/channel/list')
+        } else {
+            toast.error('Please select an image')
+        }
     };
 
     const categoriesDTO = () => {
@@ -71,8 +76,7 @@ export const CreateChannelPage = () => {
                 <h2 className="text-lg">Add channel</h2>
                 <div className="gap-x-4 grid grid-cols-2">
                     <Input
-                        register={register}
-                        registerName="channelName"
+                        register={register('channelName')}
                         labelText="Channel name"
                         variant="secondary"
                     />
@@ -80,12 +84,7 @@ export const CreateChannelPage = () => {
                 <div className="gap-x-4 grid grid-cols-2 mt-2">
                     <Select selected={selected} setSelected={setSelected} data={categoriesDTO()} onClickLoadMore={onGetCategories} hasNext={hasNext} buttonLoading={categoriesLoading} />
                 </div>
-                <Button
-                    loading={loading}
-                    onClick={handleSubmit(onSubmit)}
-                    className="mt-2"
-                    title={"Submit"}
-                />
+
             </PrimaryLayout>
             <SecondaryLayout className='mt-4'>
                 <div className="grid grid-cols-4 gap-2">
@@ -100,6 +99,14 @@ export const CreateChannelPage = () => {
                 </div>
                 <SelectFileButton onFileChange={onFileChange} />
             </SecondaryLayout>
+            <div className="bg-secondary rounded-md p-4 w-full mt-2">
+                <Button
+                    loading={loading}
+                    onClick={handleSubmit(onSubmit)}
+                    className="w-full"
+                    title={"Submit"}
+                />
+            </div>
         </div>
     )
 }

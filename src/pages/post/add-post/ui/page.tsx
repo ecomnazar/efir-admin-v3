@@ -79,8 +79,7 @@ export const AddPostPage = () => {
         </div>
         <div className="gap-x-4 grid grid-cols-2">
           <Input
-            register={register}
-            registerName="description"
+            register={register('description')}
             labelText="Description"
             variant="secondary"
             placeholder="Description"
@@ -88,8 +87,7 @@ export const AddPostPage = () => {
         </div>
         <div className=" gap-x-4 grid grid-cols-2">
           <Input
-            register={register}
-            registerName="tags"
+            register={register('tags')}
             labelText="Tags"
             variant="secondary"
             placeholder="Tags"

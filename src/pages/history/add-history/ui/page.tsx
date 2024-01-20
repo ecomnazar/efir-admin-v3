@@ -2,7 +2,7 @@ import React from 'react'
 import toast from 'react-hot-toast'
 import { Switch } from '@headlessui/react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { addHistoryImage } from '@/entities/history/api/historyApi'
+import { addHistoryImage, addHistoryVideo } from '@/entities/history/api/historyApi'
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch'
 import { useNavigate, useParams } from 'react-router-dom'
 import { PrimaryLayout, SecondaryLayout } from '@/shared/ui/layouts'
@@ -24,21 +24,17 @@ export const AddHistoryPage = () => {
     const { register, handleSubmit } = useForm<FormProps>()
     const loading = useAppSelector((state) => state.historySlice.addHistoryLoading)
     const [isVideo, setIsVideo] = React.useState(false)
-    const [images, setImages] = React.useState<File[]>([]);
+    const [previewContent, setPreviewContent] = React.useState<any>()
 
     const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event?.target?.files) {
-            const files = [];
-            for (let index = 0; index < event.target.files.length; index++) {
-                files.push(event?.target?.files[index]);
-            }
-            setImages(files);
+            setPreviewContent(event.target.files[0])
         }
     };
 
     const onChangeContentType = () => {
         setIsVideo(!isVideo)
-        setImages([])
+        setPreviewContent(null!)
     }
 
     const onSubmit: SubmitHandler<FormProps> = async ({ link }) => {
@@ -46,12 +42,16 @@ export const AddHistoryPage = () => {
         fd.append('channel', id!)
         fd.append('type', isVideo ? 'video' : 'image')
         fd.append('link', link)
-        isVideo ? fd.append('video', images[0]) : fd.append('image', images[0])
-        if (images[0]) {
-            await dispatch(addHistoryImage(fd))
+        fd.append(isVideo ? 'video' : 'image', previewContent)
+        if (previewContent) {
+            if (isVideo) {
+                await dispatch(addHistoryVideo(fd))
+            } else {
+                await dispatch(addHistoryImage(fd))
+            }
             navigate(`/channel/single/${id}`)
         } else {
-            toast.error('Please select file')
+            toast.error('Please select image or video')
         }
     }
 
@@ -93,31 +93,30 @@ export const AddHistoryPage = () => {
                         />
                     </Switch>
                 </div>
-                <div className="grid grid-cols-4 gap-2">
-                    {images &&
-                        images.map((image, i) => {
-                            return (
-                                <div key={i} className="rounded-md bg-background p-2">
-                                    {isVideo ? <video
-                                        controls
-                                        className="rounded-md aspect-square object-cover object-center"
-                                        src={URL.createObjectURL(image)}
-                                    /> : <img
-                                        className="rounded-md aspect-square object-cover object-center"
-                                        src={URL.createObjectURL(image)}
-                                    />}
-                                    <Hr className="!my-2" />
-                                    <button
-                                        // onClick={() => onDeleteImage(i)}
-                                        className="text-[13px] text-center mx-auto block"
-                                    >
-                                        Delete file
-                                    </button>
-                                </div>
-                            );
-                        })}
-                </div>
-                <SelectFileButton onFileChange={onFileChange} contentType={isVideo ? 'video' : 'image'} />
+                {previewContent && (
+                    <div className="grid grid-cols-4 gap-2">
+                        <div className="rounded-md bg-background p-2">
+                            {isVideo ? <video
+                                controls
+                                className="rounded-md aspect-square object-cover object-center"
+                                src={URL.createObjectURL(previewContent ? previewContent : '')}
+                            /> :
+                                <img
+                                    className="rounded-md aspect-square object-cover object-center"
+                                    src={URL.createObjectURL(previewContent)}
+                                />
+                            }
+                            <Hr className="!my-2" />
+                            <button
+                                // onClick={() => onDeleteImage(i)}
+                                className="text-[13px] text-center mx-auto block"
+                            >
+                                Delete file
+                            </button>
+                        </div>
+                    </div>
+                )}
+                <SelectFileButton onFileChange={onFileChange} contentType={isVideo ? 'video' : 'image'} isMultiple={false} />
             </SecondaryLayout>
         </div>
     )
