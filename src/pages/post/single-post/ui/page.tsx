@@ -31,7 +31,7 @@ export const SinglePostPage = () => {
   const post = useAppSelector((state) => state.postSlice.post.data);
   const loadingPost = useAppSelector((state) => state.postSlice.post.loading);
   const loadingUpdateButton = useAppSelector((state) => state.postSlice.updatePostLoading)
-  const [images, setImages] = React.useState<string[]>([]);
+  const [previewContent, setPreviewContent] = React.useState<any[]>([])
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
@@ -41,13 +41,13 @@ export const SinglePostPage = () => {
       for (let index = 0; index < event.target.files.length; index++) {
         files.push(event?.target?.files[index]);
       }
-      setImages([...images, ...files]);
+      setPreviewContent([...previewContent, ...files])
     }
   };
 
   const onDeleteImage = (image: string) => {
-    const filteredImages = images.filter((img) => img !== image);
-    setImages(filteredImages);
+    const filteredImages = previewContent.filter((img) => img !== image);
+    setPreviewContent(filteredImages);
   };
 
   const onSubmit: SubmitHandler<FormProps> = async ({ description, tags }) => {
@@ -57,8 +57,8 @@ export const SinglePostPage = () => {
     fd.append("description", description);
     fd.append("tags", tags);
     fd.append("is_commentable", "False");
-    for (let index = 0; index < images.length; index++) {
-      fd.append(`image_${index + 1}`, images[index]);
+    for (let index = 0; index < previewContent.length; index++) {
+      fd.append(`image_${index + 1}`, previewContent[index]);
     }
     await dispatch(updatePost(fd))
   };
@@ -81,8 +81,7 @@ export const SinglePostPage = () => {
       description: post?.description,
       tags: post?.tags,
     };
-
-    setImages(post?.images);
+    setPreviewContent(post?.images)
     reset(defaultValue);
   }, [post]);
 
@@ -126,13 +125,14 @@ export const SinglePostPage = () => {
       </PrimaryLayout>
       <SecondaryLayout className="mt-4">
         <div className="grid grid-cols-4 gap-2">
-          {images &&
-            images.map((image) => {
+          {previewContent &&
+            previewContent.map((image) => {
+              const formatedImage = typeof (image) === 'string' ? image : URL.createObjectURL(image)
               return (
                 <div key={image} className="rounded-md bg-background p-2">
                   <img
                     className="rounded-md aspect-square object-cover object-center"
-                    src={image}
+                    src={formatedImage}
                   />
                   <Hr className="!my-2" />
                   <button

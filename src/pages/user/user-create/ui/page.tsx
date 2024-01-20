@@ -92,16 +92,14 @@ export const UserCreate = () => {
         </div> */}
       </PrimaryLayout>
       <SecondaryLayout className="mt-2">
-        <div className="grid grid-cols-2 gap-2">
-          {image && (
-            <div className="rounded-md bg-background p-2">
-              <img
-                className="w-full h-full rounded-md aspect-[1/1] object-cover object-center"
-                src={URL.createObjectURL(image)}
-              />
-            </div>
-          )}
-        </div>
+        {image && (
+          <div className="rounded-md p-2">
+            <img
+              className="w-[400px] h-[400px] rounded-md aspect-[1/1] object-cover object-center"
+              src={URL.createObjectURL(image)}
+            />
+          </div>
+        )}
         <SelectFileButton onFileChange={onFileChange} />
       </SecondaryLayout>
       <div className="bg-secondary rounded-md p-4 w-full mt-2">
