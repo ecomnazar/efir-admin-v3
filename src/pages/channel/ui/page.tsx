@@ -14,7 +14,6 @@ export const ChannelPage = () => {
   const loading = useAppSelector((state) => state.channelSlice.channels.loading)
   const nextPage = useAppSelector((state) => state.channelSlice.channels.nextPage)
 
-
   const loadMore = () => dispatch(getChannels(nextPage))
 
   React.useEffect(() => {
@@ -38,12 +37,11 @@ export const ChannelPage = () => {
             <Link
               to={`/channel/single/${channel.id}`}
               key={channel?.id}
-              className={clsx("bg-background rounded-md p-4 flex flex-col",)}
+              className={clsx("bg-background rounded-md p-4 flex flex-col")}
             >
               <img
-                className="aspect-square flex-1 object-fit object-cover w-full rounded-md"
+                className="flex-1 rounded-md"
                 src={channel?.avatar}
-                alt=""
               />
               <div className="mt-2">
                 <hr className="w-full h-[1px] outline-none border-none bg-primary/20 my-2" />

@@ -4,6 +4,7 @@ import {
   deleteChannel,
   getChannel,
   getChannels,
+  updateChannel,
 } from "@/entities/channel/api/channelApi";
 import { GChannel } from "@/entities/channel/model/interfaces";
 
@@ -23,6 +24,7 @@ export const channelSlice = createSlice({
       error: false,
     },
     addChannelLoading: false, // to show loading in add channel button
+    updateChannelLoading: false, // to show loading in update channel button
     deleteChannelLoading: false, // to show loading in delete channel button
   },
   reducers: {},
@@ -93,6 +95,24 @@ export const channelSlice = createSlice({
         state.addChannelLoading = false;
       })
 
+      // update channel
+
+      .addCase(updateChannel.pending, (state) => {
+        state.updateChannelLoading = true;
+      })
+
+      .addCase(
+        updateChannel.fulfilled,
+        (state, action: PayloadAction<GChannel>) => {
+          state.updateChannelLoading = false;
+          state.channel.data = action.payload;
+        }
+      )
+
+      .addCase(updateChannel.rejected, (state) => {
+        state.updateChannelLoading = false;
+      })
+
       // delete channel
 
       .addCase(deleteChannel.pending, (state) => {
@@ -105,6 +125,7 @@ export const channelSlice = createSlice({
           state.channels.data = state.channels.data.filter(
             (item) => item.id != action.payload
           );
+          state.deleteChannelLoading = false;
         }
       )
 

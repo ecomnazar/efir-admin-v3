@@ -64,14 +64,19 @@ export const addChannel = createAsyncThunk(
 
 export const updateChannel = createAsyncThunk(
   "channel/updateChannel",
-  async (data: PChannel) => {
+  async (data: FormData) => {
     try {
-      await instanceSecond.put(`${API_ENDPOINTS.CHANNEL}`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await instanceSecond.patch(
+        `${API_ENDPOINTS.CHANNEL}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       toast.success("Канал успешнло обновлен");
+      return response.data;
     } catch (error) {
       toast.error("Канал не обновлен");
       return Promise.reject(error);

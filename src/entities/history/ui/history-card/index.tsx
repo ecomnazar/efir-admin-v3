@@ -9,7 +9,7 @@ export const HistoryCard = ({ history }: Props) => {
     return (
         <Link to={`/history/single/${history.id}`} key={history.id} className='aspect-[9/16] bg-primary'>
             {history.type === 'video' ?
-                <video className='w-full h-full object-cover object-center' src={history.video} controls /> :
+                <video className='' src={history.video} controls /> :
                 <img className='w-full h-full object-cover object-center' src={history.image} alt="" />}
         </Link>
     )

@@ -1,14 +1,15 @@
-import { deleteChannel, getChannel } from '@/entities/channel/api/channelApi'
+import React from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { useNavigate, useParams } from 'react-router-dom'
+import { deleteChannel, getChannel, updateChannel } from '@/entities/channel/api/channelApi'
 import { HistoryCard } from '@/entities/history'
+import { SelectFileButton } from '@/entities/select-file-button'
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch'
 import { useAppSelector } from '@/shared/lib/hooks/useAppSelector'
 import { Button } from '@/shared/ui/button'
 import { Hr } from '@/shared/ui/hr'
 import { Input } from '@/shared/ui/input'
 import { PrimaryLayout, SecondaryLayout } from '@/shared/ui/layouts'
-import React from 'react'
-import { useForm } from 'react-hook-form'
-import { Link, useNavigate, useParams } from 'react-router-dom'
 
 interface FormProps {
     name: string;
@@ -21,10 +22,19 @@ export const SingleChannelPage = () => {
     const { register, handleSubmit, reset } = useForm<FormProps>()
     const channel = useAppSelector((state) => state.channelSlice.channel.data)
     const loading = useAppSelector((state) => state.channelSlice.channel.loading)
+    const updateLoading = useAppSelector((state) => state.channelSlice.updateChannelLoading)
+    const deleteLoading = useAppSelector((state) => state.channelSlice.deleteChannelLoading)
+    const [previewContent, setPreviewContent] = React.useState<(string | File)[]>([''])
 
-    const onEditChannel = () => { }
+    const onEditChannel: SubmitHandler<FormProps> = async ({ name }) => {
+        const fd = new FormData() as FormData;
+        fd.append('id', id!)
+        fd.append('name', name)
+        fd.append('avatar', previewContent[0])
+        await dispatch(updateChannel(fd))
+    }
 
-    const ondeleteChannel = async () => {
+    const onDeleteChannel = async () => {
         await dispatch(deleteChannel(id!))
         navigate('/channel/list')
     }
@@ -37,22 +47,24 @@ export const SingleChannelPage = () => {
 
     React.useEffect(() => {
         const defaultValue = {
-            name: channel.name
+            name: channel?.name
         }
+        setPreviewContent([channel?.avatar!])
         reset(defaultValue)
     }, [channel])
 
     return (
         loading ? <div className="text-3xl">Loading...</div> : <div className='flex items-start justify-between flex-wrap'>
             <SecondaryLayout>
-                {channel?.avatar ? (
+                {previewContent.length !== 0 ? (
                     <img
                         className="w-[125px] h-[125px] rounded-md object-cover object-center mx-auto"
-                        src={channel.avatar}
+                        src={typeof (previewContent[0]) === 'object' ? URL.createObjectURL(previewContent[0]) : previewContent[0]}
                     />
                 ) : (
                     <div className="w-[125px] h-[125px] rounded-md bg-background mx-auto"></div>
                 )}
+                <SelectFileButton onFileChange={() => { }} className='w-fit mx-auto block' setPreviewContent={setPreviewContent} isMultiple={false} />
                 <h1 className="text-center text-textColor text-[28px] font-[500]">
                     {channel?.name}
                 </h1>
@@ -62,8 +74,8 @@ export const SingleChannelPage = () => {
                     <div className="flex items-center gap-x-2">
                         <Input register={register('name')} placeholder="Channel name" variant="secondary" />
                     </div>
-                    <Button onClick={onEditChannel} className="mt-2 w-full bg-primary/30" title={"Save profile changes"} />
-                    <Button onClick={ondeleteChannel} className="mt-2 w-full bg-red/30" title={"Delete channel"} />
+                    <Button onClick={handleSubmit(onEditChannel)} className="mt-2 w-full bg-primary/30" title={"Save profile changes"} loading={updateLoading} />
+                    <Button onClick={onDeleteChannel} className="mt-2 w-full bg-red/30" title={"Delete channel"} loading={deleteLoading} />
                     <Button onClick={onAddChannel} className="mt-2 w-full" title={"Add history"} />
                 </div>
             </SecondaryLayout>
