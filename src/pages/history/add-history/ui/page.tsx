@@ -69,12 +69,6 @@ export const AddHistoryPage = () => {
                         placeholder="Link"
                     />
                 </div>
-                <Button
-                    onClick={handleSubmit(onSubmit)}
-                    className="mt-2"
-                    title={"SUBMIT"}
-                    loading={loading}
-                />
             </PrimaryLayout>
             <SecondaryLayout className="mt-4">
                 <div className="flex items-center gap-x-2">
@@ -118,6 +112,14 @@ export const AddHistoryPage = () => {
                 )}
                 <SelectFileButton onFileChange={onFileChange} contentType={isVideo ? 'video' : 'image'} isMultiple={false} />
             </SecondaryLayout>
+            <div className='w-full bg-secondary p-4 mt-4'>
+                <Button
+                    onClick={handleSubmit(onSubmit)}
+                    className="w-full"
+                    title={"SUBMIT"}
+                    loading={loading}
+                />
+            </div>
         </div>
     )
 }

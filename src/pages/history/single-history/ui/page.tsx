@@ -1,5 +1,5 @@
 import React from "react"
-import { deleteHistory, getHistory } from "@/entities/history/api/historyApi"
+import { deleteHistory, getHistory, updateHistory } from "@/entities/history/api/historyApi"
 import { SelectFileButton } from "@/entities/select-file-button"
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch"
 import { useAppSelector } from "@/shared/lib/hooks/useAppSelector"
@@ -7,8 +7,9 @@ import { Badge } from "@/shared/ui/badge"
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
 import { PrimaryLayout, SecondaryLayout } from "@/shared/ui/layouts"
-import { useForm } from "react-hook-form"
+import { SubmitHandler, useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
+import toast from "react-hot-toast"
 
 interface FormProps {
     link: string;
@@ -18,16 +19,30 @@ export const SingleHistoryPage = () => {
     const { id } = useParams()
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
-    const { register, reset } = useForm<FormProps>()
+    const { register, reset, handleSubmit } = useForm<FormProps>()
     const loadingHistory = useAppSelector((state) => state.historySlice.history.loading)
     const deleteHistoryLoading = useAppSelector((state) => state.historySlice.deleteHistoryLoading)
     const history = useAppSelector((state) => state.historySlice.history.data)
     const [previewContent, setPreviewContent] = React.useState<(string | File)>()
     const [isVideo, setIsVideo] = React.useState(false)
 
-    const onDelete = () => {
-        dispatch(deleteHistory(id!))
+    const onDelete = async () => {
+        await dispatch(deleteHistory(id!))
         navigate(-1)
+    }
+
+    const onSubmit: SubmitHandler<FormProps> = async ({ link }) => {
+        const fd = new FormData()
+        fd.append('id', id!)
+        fd.append('type', isVideo ? 'video' : 'image')
+        fd.append('link', link)
+        fd.append(isVideo ? 'video' : 'image', previewContent!)
+        if (previewContent) {
+            // await dispatch(updateHistory(fd))
+            navigate(-1)
+        } else {
+            toast.error('Please select image or video')
+        }
     }
 
     const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,17 +88,9 @@ export const SingleHistoryPage = () => {
                         placeholder="Link"
                     />
                 </div>
-                <Button
-                    onClick={onDelete}
-                    className="mt-2 !bg-red/30"
-                    title={"Delete"}
-                    loading={deleteHistoryLoading}
-                />
             </PrimaryLayout>
                 <SecondaryLayout className="mt-4">
-                    <div className="flex items-center gap-x-2">
-                        <Badge title={isVideo ? 'Video' : 'Image'} />
-                    </div>
+                    <Badge title={isVideo ? 'Video' : 'Image'} className="mb-2" />
                     <div className="grid grid-cols-4 gap-2">
                         <div className="rounded-md bg-background p-2">
                             {history.type === 'video' ?
@@ -92,6 +99,21 @@ export const SingleHistoryPage = () => {
                         </div>
                     </div>
                     <SelectFileButton onFileChange={onFileChange} contentType={isVideo ? 'video' : 'image'} isMultiple={false} />
-                </SecondaryLayout></div>
+                </SecondaryLayout>
+                <div className="w-full bg-secondary p-4 mt-4">
+                    {/* <Button
+                        onClick={handleSubmit(onSubmit)}
+                        // loading={loadingUpdateButton}
+                        className="w-full"
+                        title={"Submit"}
+                    /> */}
+                    <Button
+                        onClick={onDelete}
+                        className="mt-2 !bg-red/30 w-full"
+                        title={"Delete"}
+                        loading={deleteHistoryLoading}
+                    />
+                </div>
+            </div>
     )
 }

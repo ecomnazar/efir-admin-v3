@@ -12,6 +12,9 @@ import { Button } from "@/shared/ui/button";
 import { SelectFileButton } from "@/entities/select-file-button";
 import { Badge } from "@/shared/ui/badge";
 import { DeletePostButton } from "./delete-post-button";
+import toast from "react-hot-toast";
+import { VideoJS } from "@/shared/ui/video-js";
+import videojs from "video.js";
 
 // features to be implemented: delete and update method
 // MUST HAVE - Onclick one post open as big modal video and
@@ -32,6 +35,7 @@ export const SinglePostPage = () => {
   const loadingPost = useAppSelector((state) => state.postSlice.post.loading);
   const loadingUpdateButton = useAppSelector((state) => state.postSlice.updatePostLoading)
   const [previewContent, setPreviewContent] = React.useState<any[]>([])
+  const [isVideo, setIsVideo] = React.useState(false)
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
@@ -57,10 +61,16 @@ export const SinglePostPage = () => {
     fd.append("description", description);
     fd.append("tags", tags);
     fd.append("is_commentable", "False");
+
     for (let index = 0; index < previewContent.length; index++) {
-      fd.append(`image_${index + 1}`, previewContent[index]);
+      if (isVideo) {
+        fd.append(`video`, previewContent[index]);
+      } else {
+        fd.append(`image_${index + 1}`, previewContent[index]);
+      }
     }
-    await dispatch(updatePost(fd))
+    if (previewContent?.length !== 0) await dispatch(updatePost(fd))
+    else toast.error("Please select at least one image")
   };
 
 
@@ -81,11 +91,33 @@ export const SinglePostPage = () => {
       description: post?.description,
       tags: post?.tags,
     };
-    setPreviewContent(post?.images)
+    if (post?.is_video) {
+      setPreviewContent([post?.m3u8])
+      setIsVideo(true)
+    } else {
+      setPreviewContent(post?.images)
+    }
     reset(defaultValue);
   }, [post]);
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+  const playerRef = React.useRef(null);
+
+
+
+
+  //@ts-ignore
+  const handlePlayerReady = (player) => {
+    playerRef.current = player;
+    // You can handle player events here, for example:
+    player.on('waiting', () => {
+      videojs.log('player is waiting');
+    });
+    player.on('dispose', () => {
+      videojs.log('player will dispose');
+    });
+  };
 
   return loadingPost ? (
     <div className="text-3xl">Loading...</div>
@@ -127,13 +159,27 @@ export const SinglePostPage = () => {
         <div className="grid grid-cols-4 gap-2">
           {previewContent &&
             previewContent.map((image) => {
-              const formatedImage = typeof (image) === 'string' ? image : URL.createObjectURL(image)
+              const formatedImage = typeof (image) === 'string' ? image : URL.createObjectURL(image || '')
+              const videoJsOptions = {
+                autoplay: true,
+                controls: true,
+                responsive: true,
+                fluid: true,
+                sources: [{
+                  src: formatedImage,
+                  type: typeof (image) === 'string' ? 'application/x-mpegURL' : 'video/mp4'
+                }]
+              };
               return (
                 <div key={image} className="rounded-md bg-background p-2">
-                  <img
-                    className="rounded-md aspect-square object-cover object-center"
-                    src={formatedImage}
-                  />
+                  {post?.is_video ?
+                    <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
+                    :
+                    <img
+                      className="rounded-md aspect-square object-cover object-center"
+                      src={formatedImage}
+                    />
+                  }
                   <Hr className="!my-2" />
                   <button
                     onClick={() => onDeleteImage(image)}
@@ -145,7 +191,7 @@ export const SinglePostPage = () => {
               );
             })}
         </div>
-        <SelectFileButton onFileChange={onFileChange} />
+        <SelectFileButton onFileChange={onFileChange} contentType={isVideo ? 'video' : 'image'} />
       </SecondaryLayout>
       <div className="w-full bg-secondary p-4 mt-4">
         <Button

@@ -1,5 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { PHistoryVideo } from "@/entities/history/api/interfaces";
+import {
+  PHistoryImage,
+  PHistoryVideo,
+} from "@/entities/history/api/interfaces";
 import toast from "react-hot-toast";
 import { API_ENDPOINTS } from "@/shared/api/endpoints";
 import { instanceSecond } from "@/shared/api/instance";
@@ -28,6 +31,23 @@ export const getHistory = createAsyncThunk(
     try {
       const response = await instanceSecond.get(
         `${API_ENDPOINTS.STORIES}?id=${id}`
+      );
+      return response.data;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+);
+
+// update history ----------------
+
+export const updateHistory = createAsyncThunk(
+  "history/updateHistory",
+  async (data: PHistoryVideo | PHistoryImage) => {
+    try {
+      const response = await instanceSecond.patch(
+        `${API_ENDPOINTS.STORIES}`,
+        data
       );
       return response.data;
     } catch (error) {
