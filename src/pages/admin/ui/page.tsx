@@ -96,9 +96,9 @@ export const AdminPage = () => {
                       <button onClick={() => openDeleteAdmin(admin)}>
                         <TbTrash size={19} />
                       </button>
-                      <Link onClick={() => dispatch(setActiveAdmin(admin))} to={`/admin/edit/${admin.id}`}>
+                      {/* <Link onClick={() => dispatch(setActiveAdmin(admin))} to={`/admin/edit/${admin.id}`}>
                         <FiEdit size={17} />
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 </li>
